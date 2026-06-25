@@ -1,0 +1,142 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Container } from "@/components/layout/Container";
+import { ContactForm } from "@/components/sections/ContactForm";
+
+export const metadata: Metadata = { title: "שירותים" };
+
+const servicesData = [
+  {
+    slug: "branding",
+    title: "מיתוג ופרסום",
+    description:
+      "בניית זהות מותג חדה ומיצוב שמבדיל אתכם מהמתחרים. לוגואים, פלטות צבעים, ניהול קמפיינים ועיצוב חומרי שיווק — הכל תחת קורת גג אחת.",
+  },
+  {
+    slug: "promotions",
+    title: 'הפקות וקד"מ',
+    description:
+      'הפקות קד"מ שיוצרות buzz — דוכני תצוגה, ערכות מתנה וחוויות מותג בלתי נשכחות שמחזקות את הקשר עם הלקוחות.',
+  },
+  {
+    slug: "events",
+    title: "הפקות אירועים",
+    description:
+      "מכנסים, ימי גיבוש, טקסים וכנסים — אירועים מרשימים מההתחלה ועד הסוף, כולל עיצוב, הפקה ולוגיסטיקה מלאה.",
+  },
+  {
+    slug: "signage",
+    title: "שילוט למוסדות",
+    description:
+      "שילוט פנימי וחיצוני למוסדות, בתי עסק ומשרדים — עיצוב, ייצור והתקנה של שלטים שמשדרים מקצועיות.",
+  },
+  {
+    slug: "digital",
+    title: "מדיה ודיגיטל",
+    description:
+      "ניהול רשתות חברתיות, קמפיינים ממומנים ושיווק תוכן — נוכחות דיגיטלית מדויקת שמביאה תוצאות מדידות.",
+  },
+  {
+    slug: "boards",
+    title: "לוחות פרסום",
+    description:
+      "עיצוב וייצור לוחות פרסום, שלטי חוצות ובאנרים — הפרסום הקלאסי שעדיין מגיע לקהל הרחב ביותר.",
+  },
+];
+
+export default function ServicesPage() {
+  return (
+    <>
+      {/* Page header */}
+      <section className="bg-black py-16 text-right">
+        <Container>
+          <p className="text-sm font-medium text-accent">מה שאנחנו עושים</p>
+          <h1 className="mt-2 text-4xl font-black text-white sm:text-5xl">
+            כל השירותים <span className="text-accent">במקום אחד</span>
+          </h1>
+          <p className="mt-3 max-w-xl text-muted">
+            פנתר מציעה מגוון שירותי פרסום ושיווק — מהתכנון ועד הביצוע, הכל
+            תחת קורת גג אחת.
+          </p>
+        </Container>
+      </section>
+
+      {/* Zigzag sections
+          RTL layout logic:
+          - DOM order: text div, image div (consistent for accessibility)
+          - isDark rows: image gets lg:order-first → moves to RIGHT in RTL
+          - isLight rows: natural order → text RIGHT, image LEFT
+      */}
+      {servicesData.map((service, index) => {
+        const isDark = index % 2 === 0;
+        return (
+          <section
+            key={service.slug}
+            id={service.slug}
+            className={isDark ? "bg-black" : "bg-white"}
+          >
+            <Container>
+              <div className="grid items-center gap-10 py-20 lg:grid-cols-2 lg:gap-16">
+                {/* Text block */}
+                <div className="text-right">
+                  <h2
+                    className={`text-3xl font-black sm:text-4xl ${
+                      isDark ? "text-white" : "text-black"
+                    }`}
+                  >
+                    {service.title}
+                  </h2>
+                  <p
+                    className={`mt-4 leading-relaxed ${
+                      isDark ? "text-muted" : "text-gray-600"
+                    }`}
+                  >
+                    {service.description}
+                  </p>
+                  <Link
+                    href="/contact"
+                    className="mt-8 inline-flex items-center rounded-full bg-accent px-7 py-3 text-sm font-bold text-white transition-colors hover:bg-accent-hover"
+                  >
+                    לפרטים ולהצעת מחיר &#171;&#171;
+                  </Link>
+                </div>
+
+                {/* Image placeholder — gets order-first on dark rows (RIGHT in RTL) */}
+                <div className={isDark ? "lg:order-first" : ""}>
+                  <div
+                    className={`aspect-video w-full overflow-hidden rounded-3xl border ${
+                      isDark
+                        ? "border-border bg-card"
+                        : "border-gray-200 bg-gray-100"
+                    } flex items-center justify-center`}
+                  >
+                    <div className="text-center">
+                      <div
+                        className={`mx-auto mb-3 h-16 w-16 rounded-full ${
+                          isDark ? "bg-accent/15" : "bg-accent/10"
+                        } flex items-center justify-center`}
+                      >
+                        <span className="text-2xl text-accent">✦</span>
+                      </div>
+                      <p
+                        className={`text-xs ${
+                          isDark ? "text-muted" : "text-gray-400"
+                        }`}
+                      >
+                        תמונה / תלת-ממד
+                        <br />
+                        (placeholder)
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Container>
+          </section>
+        );
+      })}
+
+      <ContactForm />
+    </>
+  );
+}
