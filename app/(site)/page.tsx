@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { Hero } from "@/components/sections/Hero";
+import { CategoryNavBar } from "@/components/sections/CategoryNavBar";
 import { ServicesPreview } from "@/components/sections/ServicesPreview";
 import { ContactForm } from "@/components/sections/ContactForm";
 
@@ -44,6 +45,9 @@ export default function HomePage() {
     <>
       {/* ────────────── 1. Hero ────────────── */}
       <Hero />
+
+      {/* ────────────── 1b. Category Nav ────────────── */}
+      <CategoryNavBar />
 
       {/* ────────────── 2. Why Panther ────────────── */}
       <section className="bg-white py-20 lg:py-28">
