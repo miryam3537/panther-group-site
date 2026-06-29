@@ -76,7 +76,7 @@ export function CategoryNavBar() {
             המחלקות שלנו
           </p>
           <h2 className="mt-1 text-2xl font-black text-white sm:text-3xl">
-            בחר תחום — נזניק אותך קדימה
+            בחר מחלקה — נזניק אותך קדימה
           </h2>
         </div>
 
