@@ -88,6 +88,13 @@ export default function AdminLoginPage() {
           >
             {loading ? "מתחבר..." : "כניסה"}
           </button>
+
+          <Link
+            href="/admin/reset-password"
+            className="text-center text-xs text-white/30 hover:text-white/60 transition-colors"
+          >
+            שכחתי סיסמה
+          </Link>
         </form>
       </div>
     </div>

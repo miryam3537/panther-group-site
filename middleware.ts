@@ -8,8 +8,9 @@ const ADMIN_UID = process.env.NEXT_PUBLIC_ADMIN_UID!;
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Only protect /admin routes (except /admin/login)
-  if (!pathname.startsWith("/admin") || pathname === "/admin/login") {
+  // Only protect /admin routes (except public auth pages)
+  const publicAdminPaths = ["/admin/login", "/admin/reset-password", "/admin/update-password"];
+  if (!pathname.startsWith("/admin") || publicAdminPaths.includes(pathname)) {
     return NextResponse.next();
   }
 
