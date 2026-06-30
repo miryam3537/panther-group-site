@@ -22,7 +22,8 @@ export default function ResetPasswordPage() {
     });
 
     if (error) {
-      setErrorMsg("שגיאה בשליחת המייל. בדקי את הכתובת ונסי שוב.");
+      console.error("Supabase resetPasswordForEmail error:", error);
+      setErrorMsg(`שגיאה: ${error.message}`);
       setStatus("error");
       return;
     }
