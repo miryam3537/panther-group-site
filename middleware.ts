@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Only protect /admin routes (except public auth pages)
-  const publicAdminPaths = ["/admin/login", "/admin/reset-password", "/admin/update-password"];
+  const publicAdminPaths = ["/admin/login", "/admin/reset-password", "/admin/update-password", "/api/auth/callback"];
   if (!pathname.startsWith("/admin") || publicAdminPaths.includes(pathname)) {
     return NextResponse.next();
   }

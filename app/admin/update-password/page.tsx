@@ -1,15 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 
 export default function UpdatePasswordPage() {
   const router = useRouter();
+  const [ready, setReady] = useState(false);
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  // Wait for Supabase to establish the recovery session from the URL hash/token
+  useEffect(() => {
+    const supabase = createClient();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") {
+        setReady(true);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -25,7 +37,6 @@ export default function UpdatePasswordPage() {
     }
 
     setStatus("loading");
-
     const supabase = createClient();
     const { error } = await supabase.auth.updateUser({ password });
 
@@ -57,6 +68,12 @@ export default function UpdatePasswordPage() {
             </div>
             <p className="text-sm font-semibold text-white">הסיסמה עודכנה!</p>
             <p className="mt-2 text-xs text-white/40">מעביר אותך לממשק הניהול...</p>
+          </div>
+        ) : !ready ? (
+          /* Waiting for recovery session */
+          <div className="text-center">
+            <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-white/10 border-t-accent" />
+            <p className="text-xs text-white/40">מאמת קישור...</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
