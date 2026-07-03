@@ -4,6 +4,7 @@ import { Hero } from "@/components/sections/Hero";
 import { CategoryNavBar } from "@/components/sections/CategoryNavBar";
 import { ServicesPreview } from "@/components/sections/ServicesPreview";
 import { ContactForm } from "@/components/sections/ContactForm";
+import { createServerSupabaseClient } from "@/lib/supabase-server";
 
 /* ── Placeholder data (will be replaced by Supabase queries) ── */
 
@@ -40,14 +41,20 @@ const blogPosts = [
   },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const supabase = await createServerSupabaseClient();
+  const { data: services } = await supabase
+    .from("services")
+    .select("slug, title, description")
+    .order("sort_order");
+
   return (
     <>
       {/* ────────────── 1. Hero ────────────── */}
       <Hero />
 
       {/* ────────────── 1b. Category Nav ────────────── */}
-      <CategoryNavBar />
+      <CategoryNavBar services={services ?? []} />
 
       {/* ────────────── 2. Why Panther ────────────── */}
       <section className="bg-white py-20 lg:py-28">

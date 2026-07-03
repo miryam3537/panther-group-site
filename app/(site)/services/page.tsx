@@ -1,50 +1,40 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { Container } from "@/components/layout/Container";
 import { ContactForm } from "@/components/sections/ContactForm";
+import { createServerSupabaseClient } from "@/lib/supabase-server";
 
 export const metadata: Metadata = { title: "שירותים" };
 
-const servicesData = [
-  {
-    slug: "branding",
-    title: "מיתוג ופרסום",
-    description:
-      "בניית זהות מותג חדה ומיצוב שמבדיל אתכם מהמתחרים. לוגואים, פלטות צבעים, ניהול קמפיינים ועיצוב חומרי שיווק — הכל תחת קורת גג אחת.",
-  },
-  {
-    slug: "promotions",
-    title: 'הפקות וקד"מ',
-    description:
-      'הפקות קד"מ שיוצרות buzz — דוכני תצוגה, ערכות מתנה וחוויות מותג בלתי נשכחות שמחזקות את הקשר עם הלקוחות.',
-  },
-  {
-    slug: "events",
-    title: "הפקות אירועים",
-    description:
-      "מכנסים, ימי גיבוש, טקסים וכנסים — אירועים מרשימים מההתחלה ועד הסוף, כולל עיצוב, הפקה ולוגיסטיקה מלאה.",
-  },
-  {
-    slug: "signage",
-    title: "שילוט למוסדות",
-    description:
-      "שילוט פנימי וחיצוני למוסדות, בתי עסק ומשרדים — עיצוב, ייצור והתקנה של שלטים שמשדרים מקצועיות.",
-  },
-  {
-    slug: "digital",
-    title: "מדיה ודיגיטל",
-    description:
-      "ניהול רשתות חברתיות, קמפיינים ממומנים ושיווק תוכן — נוכחות דיגיטלית מדויקת שמביאה תוצאות מדידות.",
-  },
-  {
-    slug: "boards",
-    title: "לוחות פרסום",
-    description:
-      "עיצוב וייצור לוחות פרסום, שלטי חוצות ובאנרים — הפרסום הקלאסי שעדיין מגיע לקהל הרחב ביותר.",
-  },
-];
+type Service = {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  image_url: string | null;
+  sort_order: number;
+};
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const supabase = await createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from("services")
+    .select("*")
+    .order("sort_order");
+
+  // Fallback to static data if DB fails
+  const servicesData: Service[] = error || !data?.length
+    ? [
+        { id: "1", slug: "branding",   title: "מיתוג ופרסום",   description: "בניית זהות מותג חדה ומיצוב שמבדיל אתכם מהמתחרים.", image_url: null, sort_order: 1 },
+        { id: "2", slug: "promotions", title: 'הפקות וקד"מ',    description: 'הפקות קד"מ שיוצרות buzz — חוויות מותג בלתי נשכחות.', image_url: null, sort_order: 2 },
+        { id: "3", slug: "events",     title: "הפקות אירועים",  description: "מכנסים, ימי גיבוש, טקסים וכנסים — מהתחלה ועד הסוף.", image_url: null, sort_order: 3 },
+        { id: "4", slug: "signage",    title: "שילוט למוסדות",  description: "שילוט פנימי וחיצוני — עיצוב, ייצור והתקנה.", image_url: null, sort_order: 4 },
+        { id: "5", slug: "digital",    title: "מדיה ודיגיטל",   description: "ניהול רשתות חברתיות, קמפיינים ממומנים ושיווק תוכן.", image_url: null, sort_order: 5 },
+        { id: "6", slug: "boards",     title: "לוחות פרסום",    description: "עיצוב וייצור לוחות פרסום, שלטי חוצות ובאנרים.", image_url: null, sort_order: 6 },
+      ]
+    : data;
+
   return (
     <>
       {/* Page header */}
@@ -61,12 +51,6 @@ export default function ServicesPage() {
         </Container>
       </section>
 
-      {/* Zigzag sections
-          RTL layout logic:
-          - DOM order: text div, image div (consistent for accessibility)
-          - isDark rows: image gets lg:order-first → moves to RIGHT in RTL
-          - isLight rows: natural order → text RIGHT, image LEFT
-      */}
       {servicesData.map((service, index) => {
         const isDark = index % 2 === 0;
         return (
@@ -79,18 +63,10 @@ export default function ServicesPage() {
               <div className="grid items-center gap-10 py-20 lg:grid-cols-2 lg:gap-16">
                 {/* Text block */}
                 <div className="text-right">
-                  <h2
-                    className={`text-3xl font-black sm:text-4xl ${
-                      isDark ? "text-white" : "text-black"
-                    }`}
-                  >
+                  <h2 className={`text-3xl font-black sm:text-4xl ${isDark ? "text-white" : "text-black"}`}>
                     {service.title}
                   </h2>
-                  <p
-                    className={`mt-4 leading-relaxed ${
-                      isDark ? "text-muted" : "text-gray-600"
-                    }`}
-                  >
+                  <p className={`mt-4 leading-relaxed ${isDark ? "text-muted" : "text-gray-600"}`}>
                     {service.description}
                   </p>
                   <Link
@@ -101,33 +77,28 @@ export default function ServicesPage() {
                   </Link>
                 </div>
 
-                {/* Image placeholder — gets order-first on dark rows (RIGHT in RTL) */}
+                {/* Image */}
                 <div className={isDark ? "lg:order-first" : ""}>
-                  <div
-                    className={`aspect-video w-full overflow-hidden rounded-3xl border ${
-                      isDark
-                        ? "border-border bg-card"
-                        : "border-gray-200 bg-gray-100"
-                    } flex items-center justify-center`}
-                  >
-                    <div className="text-center">
-                      <div
-                        className={`mx-auto mb-3 h-16 w-16 rounded-full ${
-                          isDark ? "bg-accent/15" : "bg-accent/10"
-                        } flex items-center justify-center`}
-                      >
-                        <span className="text-2xl text-accent">✦</span>
+                  <div className={`aspect-video w-full overflow-hidden rounded-3xl border ${isDark ? "border-border bg-card" : "border-gray-200 bg-gray-100"} flex items-center justify-center`}>
+                    {service.image_url ? (
+                      <Image
+                        src={service.image_url}
+                        alt={service.title}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="text-center">
+                        <div className={`mx-auto mb-3 h-16 w-16 rounded-full ${isDark ? "bg-accent/15" : "bg-accent/10"} flex items-center justify-center`}>
+                          <span className="text-2xl text-accent">✦</span>
+                        </div>
+                        <p className={`text-xs ${isDark ? "text-muted" : "text-gray-400"}`}>
+                          תמונה / תלת-ממד
+                          <br />
+                          (placeholder)
+                        </p>
                       </div>
-                      <p
-                        className={`text-xs ${
-                          isDark ? "text-muted" : "text-gray-400"
-                        }`}
-                      >
-                        תמונה / תלת-ממד
-                        <br />
-                        (placeholder)
-                      </p>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
