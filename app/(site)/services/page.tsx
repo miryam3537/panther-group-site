@@ -79,7 +79,7 @@ export default async function ServicesPage() {
 
                 {/* Image */}
                 <div className={isDark ? "lg:order-first" : ""}>
-                  <div className={`aspect-video w-full overflow-hidden rounded-3xl border ${isDark ? "border-border bg-card" : "border-gray-200 bg-gray-100"} flex items-center justify-center`}>
+                  <div className={`relative aspect-video w-full overflow-hidden rounded-3xl border ${isDark ? "border-border bg-card" : "border-gray-200 bg-gray-100"} flex items-center justify-center`}>
                     {service.image_url ? (
                       <Image
                         src={service.image_url}
