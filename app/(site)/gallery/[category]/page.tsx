@@ -69,6 +69,28 @@ export default async function GalleryCategoryPage({
         </Container>
       </section>
 
+      {/* CTA banner — between gallery grid and contact form */}
+      <section className="bg-accent py-14">
+        <Container>
+          <div className="flex flex-col items-center justify-between gap-6 text-center sm:flex-row sm:text-right">
+            <div>
+              <p className="text-lg font-black text-white sm:text-2xl">
+                אהבת את העבודות?
+              </p>
+              <p className="mt-1 text-sm text-white/80">
+                נבנה לך כזה — מהירות, איכות ומחיר שתשמח עליו
+              </p>
+            </div>
+            <Link
+              href="/contact"
+              className="shrink-0 rounded-full bg-black px-8 py-4 text-sm font-black text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl active:scale-95"
+            >
+              להצעת מחיר מהירה &#171;&#171;
+            </Link>
+          </div>
+        </Container>
+      </section>
+
       <ContactForm />
     </>
   );

@@ -69,12 +69,24 @@ export default async function ServicesPage() {
                   <p className={`mt-4 leading-relaxed ${isDark ? "text-muted" : "text-gray-600"}`}>
                     {service.description}
                   </p>
-                  <Link
-                    href="/contact"
-                    className="mt-8 inline-flex items-center rounded-full bg-accent px-7 py-3 text-sm font-bold text-white transition-colors hover:bg-accent-hover"
-                  >
-                    לפרטים ולהצעת מחיר &#171;&#171;
-                  </Link>
+                  <div className="mt-8 flex flex-wrap items-center justify-end gap-3">
+                    <Link
+                      href={`/gallery/${service.slug}`}
+                      className={`inline-flex items-center rounded-full border px-6 py-3 text-sm font-bold transition-colors ${
+                        isDark
+                          ? "border-white/20 text-white hover:border-accent hover:text-accent"
+                          : "border-black/20 text-black hover:border-accent hover:text-accent"
+                      }`}
+                    >
+                      לגלריה שלנו &#171;&#171;
+                    </Link>
+                    <Link
+                      href="/contact"
+                      className="inline-flex items-center rounded-full bg-accent px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-accent-hover"
+                    >
+                      להצעת מחיר &#171;&#171;
+                    </Link>
+                  </div>
                 </div>
 
                 {/* Image */}
