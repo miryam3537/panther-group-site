@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Phone, Mail, ArrowUp } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { navItems, siteConfig } from "@/lib/site";
 
@@ -42,9 +42,9 @@ export function Footer() {
 
       <footer className="bg-accent" role="contentinfo">
 
-        {/* ── Main content ── */}
-        <Container className="py-16 lg:py-24">
-          <div className="grid gap-12 md:grid-cols-3 lg:gap-20">
+        {/* ── Main content: 2 columns + CTA ── */}
+        <Container className="py-16 lg:py-20">
+          <div className="grid gap-12 md:grid-cols-2 lg:gap-20">
 
             {/* Col 1 — Logo + description */}
             <div className="text-right">
@@ -59,6 +59,14 @@ export function Footer() {
               <p className="mt-5 max-w-xs text-sm font-normal leading-loose text-white/70">
                 {siteConfig.description}
               </p>
+
+              {/* CTA button — scrolls to contact form */}
+              <Link
+                href="/#contact"
+                className="btn-cta mt-8 inline-flex items-center rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:border-white hover:bg-white/10"
+              >
+                שלחו לנו הודעה &#171;&#171;
+              </Link>
             </div>
 
             {/* Col 2 — Navigation */}
@@ -88,50 +96,6 @@ export function Footer() {
                   </Link>
                 </li>
               </ul>
-            </div>
-
-            {/* Col 3 — Contact box */}
-            <div className="text-right">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">
-                יצירת קשר
-              </h3>
-
-              <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-6 backdrop-blur-sm lg:p-8">
-                <p className="text-base font-semibold text-white">
-                  {siteConfig.name}
-                </p>
-
-                <div className="mt-5 flex flex-col gap-4">
-                  <a
-                    href={`tel:${siteConfig.phone.replace(/-/g, "")}`}
-                    className="group flex items-center justify-end gap-3 text-sm font-normal text-white/75 transition-all duration-200 hover:text-white"
-                  >
-                    <span className="text-right">{siteConfig.phone}</span>
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 transition-all duration-200 group-hover:bg-white/20">
-                      <Phone className="h-3.5 w-3.5" strokeWidth={2} />
-                    </span>
-                  </a>
-
-                  <div className="border-t border-white/10" />
-
-                  <a
-                    href={`mailto:${siteConfig.email}`}
-                    className="group flex items-center justify-end gap-3 text-sm font-normal text-white/75 transition-all duration-200 hover:text-white"
-                  >
-                    <span className="break-all text-right">{siteConfig.email}</span>
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 transition-all duration-200 group-hover:bg-white/20">
-                      <Mail className="h-3.5 w-3.5" strokeWidth={2} />
-                    </span>
-                  </a>
-                </div>
-
-                <Link
-                  href="/contact"
-                  className="btn-cta mt-6 flex w-full items-center justify-center rounded-xl bg-white/15 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/25"
-                >
-                  שלחו לנו הודעה &#171;&#171;
-                </Link>
-              </div>
             </div>
 
           </div>
