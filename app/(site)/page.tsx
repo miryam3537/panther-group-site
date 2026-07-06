@@ -67,10 +67,10 @@ export default async function HomePage() {
             <span className="text-accent">פנתר?</span>
           </h2>
 
-          <div className="mt-8 flex justify-center">
+          <div className="mt-10 flex justify-center">
             <Link
               href="/methodology"
-              className="inline-flex items-center rounded-full bg-accent px-8 py-4 text-sm font-bold text-white shadow-lg shadow-accent/30 transition-all hover:bg-orange-600 hover:scale-105 active:scale-95"
+              className="pulse-glow inline-flex items-center rounded-2xl bg-accent px-10 py-5 text-lg font-black text-white shadow-xl shadow-accent/40 transition-all hover:bg-orange-600 hover:scale-105 active:scale-95 sm:px-14 sm:py-6 sm:text-xl"
             >
               רוצים לזנק? הכירו את השיטה של פנתר &#187;&#187;
             </Link>

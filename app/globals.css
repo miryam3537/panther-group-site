@@ -25,6 +25,20 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Subtle pulsing glow for high-conversion CTA buttons */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 24px 0px rgba(249, 115, 22, 0.5), 0 20px 40px -8px rgba(249, 115, 22, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 40px 8px rgba(249, 115, 22, 0.75), 0 20px 48px -4px rgba(249, 115, 22, 0.55);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2.4s ease-in-out infinite;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

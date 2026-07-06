@@ -139,7 +139,7 @@ export default function MethodologyPage() {
             </motion.h1>
             <motion.p
               variants={staggerItem}
-              className="mt-6 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg"
+              className="mt-6 max-w-xl text-lg leading-relaxed text-white/60 sm:text-xl"
             >
               יש לכם חלום לגדול. הדרך להפוך למותג נחשק מתחילה בנקודה אחת —
               אסטרטגיה חדה, ביצוע מנצח. זו השיטה שלנו.
@@ -170,10 +170,10 @@ export default function MethodologyPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
               נקודת הזינוק של העסק
             </p>
-            <h2 className="mt-2 text-3xl font-black text-black sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-black text-black sm:text-4xl lg:text-5xl">
               הנוסחה לעסק מצליח = <span className="text-accent">מיקוד</span>
             </h2>
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-gray-500">
+            <p className="mt-4 max-w-2xl text-lg leading-relaxed text-gray-500">
               לעצור, לבדוק את הנתונים המשתנים בשטח, ולהקיף את המכלול בראיה
               קדימה דרך אסטרטגיה מדויקת. זו המיומנות שלנו.
             </p>
@@ -195,8 +195,8 @@ export default function MethodologyPage() {
                 <span className="text-4xl font-black text-accent/20">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="mt-3 text-lg font-black text-black">{step.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-gray-500">{step.desc}</p>
+                <h3 className="mt-3 text-xl font-black text-black">{step.title}</h3>
+                <p className="mt-2 text-base leading-relaxed text-gray-500">{step.desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -219,7 +219,7 @@ export default function MethodologyPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent/70">
               הסוד שמאחורי כל מותג מנצח
             </p>
-            <h2 className="mt-2 text-3xl font-black text-white sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-black text-white sm:text-4xl lg:text-5xl">
               3 שכבות של מותג{" "}
               <span className="text-accent">מנצח</span>
             </h2>
@@ -252,8 +252,8 @@ export default function MethodologyPage() {
                   <div className="mt-4 flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-white/6 text-accent transition-all group-hover:border-accent/40 group-hover:bg-accent/15">
                     {layer.icon}
                   </div>
-                  <h3 className="mt-5 text-xl font-black text-white">{layer.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-white/50">{layer.desc}</p>
+                  <h3 className="mt-5 text-2xl font-black text-white">{layer.title}</h3>
+                  <p className="mt-3 text-base leading-loose text-white/60">{layer.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -268,11 +268,11 @@ export default function MethodologyPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
               תהליך העבודה שלנו
             </p>
-            <h2 className="mt-2 text-3xl font-black text-foreground sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-black text-foreground sm:text-4xl lg:text-5xl">
               5 שלבים לנקודת{" "}
               <span className="text-accent">ההצלחה</span> שלכם
             </h2>
-            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted">
+            <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted">
               לפני כל עיצוב, מודעה או קמפיין — יש שלב בסיס להצלחה. פגישת
               אסטרטגיה שבה כל חלקי הפאזל מתבהרים מול העיניים.
             </p>
@@ -294,8 +294,8 @@ export default function MethodologyPage() {
 
                   {/* Content */}
                   <div className="pt-1 pb-2">
-                    <h3 className="text-lg font-black text-foreground">{step.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted max-w-2xl">
+                    <h3 className="text-xl font-black text-foreground sm:text-2xl">{step.title}</h3>
+                    <p className="mt-2 text-base leading-loose text-muted max-w-2xl sm:text-lg">
                       {step.desc}
                     </p>
                   </div>
@@ -315,11 +315,11 @@ export default function MethodologyPage() {
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent/70">
                 למה לבחור פנתר?
               </p>
-              <h2 className="mt-2 text-3xl font-black text-white sm:text-4xl">
+              <h2 className="mt-2 text-3xl font-black text-white sm:text-4xl lg:text-5xl">
                 אנחנו לא משווקים.{" "}
                 <span className="text-accent">אנחנו בונים מהלכים.</span>
               </h2>
-              <p className="mt-5 text-sm leading-relaxed text-white/55">
+              <p className="mt-5 text-lg leading-loose text-white/65">
                 לכל עסק יש DNA משלו. אנו מתאימים לכל עסק אסטרטגיה, מסר ושפה
                 שלא דומים לשום דבר אחר בשוק. זו הסיבה שהלקוחות שלנו לא
                 «נראים אותו דבר» — כל לקוח ייחודי בפני עצמו.
@@ -359,7 +359,7 @@ export default function MethodologyPage() {
                       <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
                     </svg>
                   </span>
-                  <span className="text-sm font-medium text-white/80">{b}</span>
+                  <span className="text-base font-medium text-white/85 sm:text-lg">{b}</span>
                 </motion.li>
               ))}
             </motion.ul>
@@ -377,7 +377,7 @@ export default function MethodologyPage() {
             <h2 className="mt-3 text-3xl font-black text-white sm:text-4xl lg:text-5xl">
               התחלה נכונה היא סוד ההצלחה!
             </h2>
-            <p className="mt-4 text-base text-white/80">
+            <p className="mt-4 text-lg text-white/85 sm:text-xl">
               יחד יוצרים את המחר של העסק שלכם.
             </p>
             <motion.div
