@@ -117,14 +117,14 @@ export function ServicesPreview() {
             <h2 className="title-pulse text-4xl font-black leading-tight text-white sm:text-5xl lg:text-6xl">
               כל המחלקות
               <br />
-              <span className="title-pulse title-pulse-d03 text-accent">מקום אחד!</span>
+              <span className="title-pulse title-pulse-d03 inline-block text-accent">מקום אחד!</span>
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-muted">
               פנתר מציעה פתרון שלם — מהתכנון ועד הביצוע, הכל תחת קורת גג אחת.
             </p>
             <Link
               href="/services"
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-bold text-white transition-colors hover:bg-accent-hover"
+              className="btn-cta mt-8 inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-bold text-white transition-colors hover:bg-accent-hover"
             >
               לכל המחלקות &#171;&#171;
             </Link>

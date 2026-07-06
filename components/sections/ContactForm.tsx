@@ -164,7 +164,7 @@ export function ContactForm() {
                 <button
                   type="submit"
                   disabled={status === "loading"}
-                  className="w-full rounded-xl bg-black py-4 text-center text-base font-bold text-white transition-all hover:opacity-80 active:scale-[0.98] disabled:opacity-50"
+                  className="btn-cta w-full rounded-xl bg-black py-4 text-center text-base font-bold text-white disabled:opacity-50"
                 >
                   {status === "loading" ? "שולח..." : "שלח הודעה"}
                 </button>

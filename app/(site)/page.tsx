@@ -64,12 +64,10 @@ export default async function HomePage() {
       {/* ────────────── 2. Why Panther ────────────── */}
       <section className="bg-white py-20 lg:py-28">
         <Container>
-          <div className="title-pulse flex justify-center">
-            <h2 className="text-center text-3xl font-bold text-black sm:text-4xl lg:text-5xl">
-              למה עסקים בוחרים{" "}
-              <span className="text-accent">פנתר?</span>
-            </h2>
-          </div>
+          <h2 className="title-pulse w-full text-center text-3xl font-bold text-black sm:text-4xl lg:text-5xl">
+            למה עסקים בוחרים{" "}
+            <span className="text-accent">פנתר?</span>
+          </h2>
 
           <div className="mt-10 flex justify-center">
             <Link
