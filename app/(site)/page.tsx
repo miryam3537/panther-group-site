@@ -67,6 +67,15 @@ export default async function HomePage() {
             <span className="text-accent">פנתר?</span>
           </h2>
 
+          <div className="mt-8 flex justify-center">
+            <Link
+              href="/methodology"
+              className="inline-flex items-center rounded-full bg-accent px-8 py-4 text-sm font-bold text-white shadow-lg shadow-accent/30 transition-all hover:bg-orange-600 hover:scale-105 active:scale-95"
+            >
+              רוצים לזנק? הכירו את השיטה של פנתר &#187;&#187;
+            </Link>
+          </div>
+
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             {/* Card 1 */}
             <div className="flex flex-col items-center rounded-3xl bg-accent p-10 text-center shadow-lg shadow-accent/20">
