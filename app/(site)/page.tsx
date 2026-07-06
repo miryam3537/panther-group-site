@@ -42,6 +42,36 @@ const blogPosts = [
   },
 ];
 
+/**
+ * Splits a string into individual letter spans for CSS stagger animation.
+ * baseDelay = the second at which the first letter should appear.
+ * Each subsequent letter is delayed by 0.05s.
+ */
+function StaggeredTitle({
+  text,
+  baseDelay,
+  className = "",
+}: {
+  text: string;
+  baseDelay: number;
+  className?: string;
+}) {
+  return (
+    <span aria-label={text} className={className}>
+      {text.split("").map((char, i) => (
+        <span
+          key={i}
+          className="letter-stagger"
+          style={{ animationDelay: `${(baseDelay + i * 0.05).toFixed(2)}s` }}
+          aria-hidden="true"
+        >
+          {char === " " ? "\u00A0" : char}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 export default async function HomePage() {
   const supabase = await createServerSupabaseClient();
   const { data: services } = await supabase
@@ -77,8 +107,8 @@ export default async function HomePage() {
           </div>
 
           <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {/* Card 1 */}
-            <div className="flex flex-col items-center rounded-3xl bg-accent p-10 text-center shadow-lg shadow-accent/20">
+            {/* Card 1 — delay 0.10s, letters start at 0.75s */}
+            <div className="card-stagger card-d1 flex flex-col items-center rounded-3xl bg-accent p-10 text-center shadow-lg shadow-accent/20">
               <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/20">
                 <svg
                   viewBox="0 0 24 24"
@@ -95,14 +125,16 @@ export default async function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-2xl font-black text-white">מעטפת מלאה</h3>
+              <h3 className="text-2xl font-black text-white">
+                <StaggeredTitle text="מעטפת מלאה" baseDelay={0.75} />
+              </h3>
               <p className="mt-2 text-sm text-white/80">
                 פתרון שלם מהתכנון ועד הביצוע
               </p>
             </div>
 
-            {/* Card 2 */}
-            <div className="flex flex-col items-center rounded-3xl bg-accent p-10 text-center shadow-lg shadow-accent/20">
+            {/* Card 2 — delay 0.35s, letters start at 1.00s */}
+            <div className="card-stagger card-d2 flex flex-col items-center rounded-3xl bg-accent p-10 text-center shadow-lg shadow-accent/20">
               <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/20">
                 <svg
                   viewBox="0 0 24 24"
@@ -119,14 +151,16 @@ export default async function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-2xl font-black text-white">מחירים הוגנים</h3>
+              <h3 className="text-2xl font-black text-white">
+                <StaggeredTitle text="מחירים הוגנים" baseDelay={1.00} />
+              </h3>
               <p className="mt-2 text-sm text-white/80">
                 תמחור שקוף ותחרותי לכל תקציב
               </p>
             </div>
 
-            {/* Card 3 */}
-            <div className="flex flex-col items-center rounded-3xl border-2 border-gray-200 p-10 text-center">
+            {/* Card 3 — delay 0.60s, letters start at 1.25s */}
+            <div className="card-stagger card-d3 flex flex-col items-center rounded-3xl border-2 border-gray-200 p-10 text-center">
               <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-orange-50">
                 <svg
                   viewBox="0 0 24 24"
@@ -143,11 +177,13 @@ export default async function HomePage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-2xl font-black text-black">זמינות גבוהה</h3>
+              <h3 className="text-2xl font-black text-black">
+                <StaggeredTitle text="זמינות גבוהה" baseDelay={1.25} />
+              </h3>
               <p className="mt-3 text-sm leading-relaxed text-gray-600">
-                מעבר מהיר, לישוב אישי,
+                מענה מהיר
                 <br />
-                לכל ארץ הפרויקט
+                תמיד כאן בשבילך
               </p>
             </div>
           </div>
