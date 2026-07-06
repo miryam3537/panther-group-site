@@ -4,6 +4,7 @@ import { Hero } from "@/components/sections/Hero";
 import { CategoryNavBar } from "@/components/sections/CategoryNavBar";
 import { ServicesPreview } from "@/components/sections/ServicesPreview";
 import { ContactForm } from "@/components/sections/ContactForm";
+import { AutoScroll } from "@/components/ui/AutoScroll";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 
 /* ── Placeholder data (will be replaced by Supabase queries) ── */
@@ -50,6 +51,8 @@ export default async function HomePage() {
 
   return (
     <>
+      <AutoScroll />
+
       {/* ────────────── 1. Hero ────────────── */}
       <Hero />
 

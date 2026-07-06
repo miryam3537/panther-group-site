@@ -52,7 +52,7 @@ export function CategoryNavBar({ services }: { services?: ServiceItem[] }) {
   const cats = services ?? [];
 
   return (
-    <section className="bg-black py-12 lg:py-16">
+    <section id="services" className="bg-black py-12 lg:py-16">
       <Container>
         {/* Header */}
         <div className="mb-8 text-center">
