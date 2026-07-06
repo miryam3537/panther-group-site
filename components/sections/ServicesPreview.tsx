@@ -115,7 +115,7 @@ export function ServicesPreview() {
           {/* ── RIGHT: Headline ── */}
           <div className="text-right lg:w-5/12">
             <h2 className="text-4xl font-black leading-tight text-white sm:text-5xl lg:text-6xl">
-              כל השירותים
+              כל המחלקות
               <br />
               <span className="text-accent">מקום אחד!</span>
             </h2>
@@ -126,7 +126,7 @@ export function ServicesPreview() {
               href="/services"
               className="mt-8 inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-bold text-white transition-colors hover:bg-accent-hover"
             >
-              לכל השירותים &#171;&#171;
+              לכל המחלקות &#171;&#171;
             </Link>
           </div>
 

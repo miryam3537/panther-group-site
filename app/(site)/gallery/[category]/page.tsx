@@ -4,12 +4,12 @@ import { Container } from "@/components/layout/Container";
 import { ContactForm } from "@/components/sections/ContactForm";
 
 const categoryNames: Record<string, string> = {
-  branding: "מיתוג ופרסום",
-  promotions: 'הפקות וקד"מ',
-  events: "הפקות אירועים",
-  signage: "שילוט למוסדות",
-  digital: "מדיה ודיגיטל",
-  boards: "לוחות פרסום",
+  branding: "מחלקת מיתוג ופרסום ",
+  promotions: 'מחלקת הפקות וקד"מ',
+  events: "מחלקת הפקות אירועים",
+  signage: "מחלקת שילוט למוסדות",
+  digital: "מחלקת מדיה ודיגיטל",
+  boards: "מחלקת לוחות פרסום",
 };
 
 export async function generateMetadata({
@@ -65,28 +65,6 @@ export default async function GalleryCategoryPage({
                 </div>
               </div>
             ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* CTA banner — between gallery grid and contact form */}
-      <section className="bg-accent py-14">
-        <Container>
-          <div className="flex flex-col items-center justify-between gap-6 text-center sm:flex-row sm:text-right">
-            <div>
-              <p className="text-lg font-black text-white sm:text-2xl">
-                אהבת את העבודות?
-              </p>
-              <p className="mt-1 text-sm text-white/80">
-                נבנה לך כזה — מהירות, איכות ומחיר שתשמח עליו
-              </p>
-            </div>
-            <Link
-              href="/contact"
-              className="shrink-0 rounded-full bg-black px-8 py-4 text-sm font-black text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl active:scale-95"
-            >
-              להצעת מחיר מהירה &#171;&#171;
-            </Link>
           </div>
         </Container>
       </section>
