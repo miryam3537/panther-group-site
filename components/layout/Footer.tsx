@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, Phone, Mail } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { navItems, siteConfig } from "@/lib/site";
 
-/* ── Back-to-Top button ─────────────────────────────────────── */
 function BackToTop() {
   const [visible, setVisible] = useState(false);
 
@@ -21,18 +20,17 @@ function BackToTop() {
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       aria-label="חזרה לראש העמוד"
       className={`
-        fixed bottom-6 left-6 z-50 flex h-11 w-11 items-center justify-center
-        rounded-full bg-black/70 text-white shadow-lg backdrop-blur-sm
-        transition-all duration-300 hover:bg-black hover:scale-110 active:scale-95
+        fixed bottom-6 left-6 z-50 flex h-10 w-10 items-center justify-center
+        rounded-full bg-accent text-white shadow-lg
+        transition-all duration-300 hover:bg-orange-600 hover:scale-110 active:scale-95
         ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}
       `}
     >
-      <ArrowUp className="h-5 w-5" strokeWidth={2.5} />
+      <ArrowUp className="h-4 w-4" strokeWidth={2.5} />
     </button>
   );
 }
 
-/* ── Footer ─────────────────────────────────────────────────── */
 export function Footer() {
   const year = new Date().getFullYear();
 
@@ -40,60 +38,62 @@ export function Footer() {
     <>
       <BackToTop />
 
-      <footer className="bg-accent" role="contentinfo">
+      <footer className="bg-accent" dir="rtl" role="contentinfo">
+        <Container className="py-8">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-4 lg:gap-12">
 
-        {/* ── Main content: 2 columns + CTA ── */}
-        <Container className="py-16 lg:py-20">
-          <div className="grid gap-12 md:grid-cols-2 lg:gap-20">
-
-            {/* Col 1 — Logo + description */}
-            <div className="text-right">
+            {/* Col 1 — Logo */}
+            <div className="flex flex-col items-start gap-2">
               <Link href="/" aria-label={`${siteConfig.name} — דף הבית`}>
-                <span className="text-3xl font-black tracking-tight text-white">
+                <span className="text-2xl font-black tracking-tight text-white">
                   {siteConfig.name}
                 </span>
-                <p className="mt-1 text-sm font-medium text-white/65">
-                  {siteConfig.tagline}
-                </p>
               </Link>
-              <p className="mt-5 max-w-xs text-sm font-normal leading-loose text-white/70">
-                {siteConfig.description}
-              </p>
-
-              {/* CTA button — scrolls to contact form */}
-              <Link
-                href="/#contact"
-                className="btn-cta mt-8 inline-flex items-center rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:border-white hover:bg-white/10"
-              >
-                שלחו לנו הודעה &#171;&#171;
-              </Link>
+              <p className="text-xs text-white/60">{siteConfig.tagline}</p>
             </div>
 
-            {/* Col 2 — Navigation */}
-            <div className="text-right">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">
+            {/* Col 2 — Nav */}
+            <div>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-white/50">
                 ניווט
-              </h3>
-              <ul className="mt-5 flex flex-col gap-3">
+              </p>
+              <ul className="flex flex-wrap gap-x-5 gap-y-2">
                 {navItems.map((item) => (
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className="group inline-flex items-center gap-1.5 text-sm font-normal text-white/75 transition-all duration-200 hover:text-white"
+                      className="text-sm text-white/70 transition-colors hover:text-white"
                     >
-                      <span className="block h-px w-0 bg-white transition-all duration-200 group-hover:w-4" />
                       {item.label}
                     </Link>
                   </li>
                 ))}
+              </ul>
+            </div>
+
+            {/* Col 3 — Contact */}
+            <div>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-white/50">
+                צור קשר
+              </p>
+              <ul className="flex flex-col gap-2">
                 <li>
-                  <Link
-                    href="/contact"
-                    className="group inline-flex items-center gap-1.5 text-sm font-normal text-white/75 transition-all duration-200 hover:text-white"
+                  <a
+                    href={`tel:${siteConfig.phone}`}
+                    className="inline-flex items-center gap-2 text-sm text-white/70 transition-colors hover:text-white"
                   >
-                    <span className="block h-px w-0 bg-white transition-all duration-200 group-hover:w-4" />
-                    הצעת מחיר
-                  </Link>
+                    <Phone className="h-3.5 w-3.5 shrink-0" />
+                    {siteConfig.phone}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={`mailto:${siteConfig.email}`}
+                    className="inline-flex items-center gap-2 text-sm text-white/70 transition-colors hover:text-white"
+                  >
+                    <Mail className="h-3.5 w-3.5 shrink-0" />
+                    {siteConfig.email}
+                  </a>
                 </li>
               </ul>
             </div>
@@ -101,15 +101,13 @@ export function Footer() {
           </div>
         </Container>
 
-        {/* ── Bottom bar ── */}
         <div className="border-t border-white/10">
-          <Container className="py-5">
-            <p className="text-center text-xs font-normal text-white/50">
-              © {year}&nbsp;{siteConfig.name} פרסום. כל הזכויות שמורות.
+          <Container className="py-4">
+            <p className="text-center text-xs text-white/40">
+              © {year} {siteConfig.name} פרסום. כל הזכויות שמורות.
             </p>
           </Container>
         </div>
-
       </footer>
     </>
   );
