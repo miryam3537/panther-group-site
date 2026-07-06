@@ -80,15 +80,16 @@ html {
 /* ── Services section title pulse ──────────────────────────── */
 @keyframes title-pulse {
   0%   { transform: scale(1);    opacity: 1;    }
-  25%  { transform: scale(1.35); opacity: 0.85; }
-  60%  { transform: scale(0.88); opacity: 0.7;  }
-  80%  { transform: scale(1.08); opacity: 0.9;  }
+  20%  { transform: scale(1.18); opacity: 0.9;  }
+  45%  { transform: scale(0.93); opacity: 0.8;  }
+  70%  { transform: scale(1.06); opacity: 0.95; }
   100% { transform: scale(1);    opacity: 1;    }
 }
 
 .title-pulse {
   display: inline-block;
-  animation: title-pulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  transform-origin: center;
+  animation: title-pulse 2.4s ease-in-out infinite;
 }
 .title-pulse-d03 { animation-delay: 0.3s; }
 .title-pulse-d05 { animation-delay: 0.5s; }
