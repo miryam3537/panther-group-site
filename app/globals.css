@@ -48,20 +48,33 @@ html {
   }
 }
 
-/* Base card animation — starts hidden, fills forward after playing */
+/* Cards stay invisible until .is-visible is applied by the observer */
 .card-stagger {
   opacity: 0;
+  transform: translateY(40px);
+  transition: none; /* animation handles it */
+}
+
+/* Trigger card animation only when container is visible */
+.cards-container.is-visible .card-stagger {
   animation: card-enter 0.6s cubic-bezier(0.25, 0.1, 0.25, 1) both;
 }
-.card-d1 { animation-delay: 0.10s; }
-.card-d2 { animation-delay: 0.35s; }
-.card-d3 { animation-delay: 0.60s; }
+.cards-container.is-visible .card-d1 { animation-delay: 0.10s; }
+.cards-container.is-visible .card-d2 { animation-delay: 0.35s; }
+.cards-container.is-visible .card-d3 { animation-delay: 0.60s; }
 
-/* Individual letter spans */
+/* Individual letter spans — hidden by default */
 .letter-stagger {
   display: inline-block;
   opacity: 0;
+  transform: translateY(8px);
+}
+
+/* Trigger letter animation only when container is visible */
+.cards-container.is-visible .letter-stagger {
   animation: letter-enter 0.3s ease both;
+  /* --char-index is set inline per letter; delay = card-base + index * 0.05s */
+  animation-delay: calc(var(--char-delay, 0.75s));
 }
 
 /* Subtle pulsing glow for high-conversion CTA buttons */
