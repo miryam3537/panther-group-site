@@ -117,7 +117,7 @@ export function ServicesPreview() {
             <h2 className="title-pulse text-4xl font-black leading-tight text-white sm:text-5xl lg:text-6xl">
               כל המחלקות
               <br />
-              <span className="text-accent">מקום אחד!</span>
+              <span className="title-pulse title-pulse-d03 text-accent">מקום אחד!</span>
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-muted">
               פנתר מציעה פתרון שלם — מהתכנון ועד הביצוע, הכל תחת קורת גג אחת.

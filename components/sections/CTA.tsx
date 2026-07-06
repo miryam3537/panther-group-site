@@ -12,7 +12,7 @@ export function CTA() {
           />
 
           <div className="relative mx-auto max-w-2xl">
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            <h2 className="title-pulse title-pulse-d03 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               מוכנים לקחת את המותג שלכם
               <span className="block text-accent">שלב קדימה?</span>
             </h2>

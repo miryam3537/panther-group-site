@@ -170,7 +170,7 @@ export default function MethodologyPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
               נקודת הזינוק של העסק
             </p>
-            <h2 className="mt-2 text-3xl font-black text-black sm:text-4xl lg:text-5xl">
+            <h2 className="title-pulse title-pulse-d07 mt-2 text-3xl font-black text-black sm:text-4xl lg:text-5xl">
               הנוסחה לעסק מצליח = <span className="text-accent">מיקוד</span>
             </h2>
             <p className="mt-4 max-w-2xl text-lg leading-relaxed text-gray-500">

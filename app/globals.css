@@ -90,6 +90,10 @@ html {
   display: inline-block;
   animation: title-pulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
+.title-pulse-d03 { animation-delay: 0.3s; }
+.title-pulse-d05 { animation-delay: 0.5s; }
+.title-pulse-d07 { animation-delay: 0.7s; }
+.title-pulse-d10 { animation-delay: 1.0s; }
 
 /* Subtle pulsing glow for high-conversion CTA buttons */
 @keyframes pulse-glow {

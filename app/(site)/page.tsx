@@ -64,7 +64,7 @@ export default async function HomePage() {
       {/* ────────────── 2. Why Panther ────────────── */}
       <section className="bg-white py-20 lg:py-28">
         <Container>
-          <h2 className="text-center text-3xl font-bold text-black sm:text-4xl lg:text-5xl">
+          <h2 className="title-pulse text-center text-3xl font-bold text-black sm:text-4xl lg:text-5xl">
             למה עסקים בוחרים{" "}
             <span className="text-accent">פנתר?</span>
           </h2>
@@ -98,7 +98,7 @@ export default async function HomePage() {
             </Link>
             <div className="text-right">
               <p className="text-sm font-medium text-accent">עבודות שביצענו</p>
-              <h2 className="mt-1 text-3xl font-bold text-foreground sm:text-4xl">
+              <h2 className="title-pulse title-pulse-d05 mt-1 text-3xl font-bold text-foreground sm:text-4xl">
                 הגלריה שלנו
               </h2>
             </div>
@@ -138,7 +138,7 @@ export default async function HomePage() {
             </Link>
             <div className="text-right">
               <p className="text-sm font-medium text-accent">מהבלוג שלנו</p>
-              <h2 className="mt-1 text-3xl font-bold text-foreground sm:text-4xl">
+              <h2 className="title-pulse title-pulse-d10 mt-1 text-3xl font-bold text-foreground sm:text-4xl">
                 מאמרים אחרונים
               </h2>
             </div>
