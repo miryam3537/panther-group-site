@@ -114,7 +114,7 @@ export function ServicesPreview() {
         <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-center lg:gap-16">
           {/* ── RIGHT: Headline ── */}
           <div className="text-right lg:w-5/12">
-            <h2 className="text-4xl font-black leading-tight text-white sm:text-5xl lg:text-6xl">
+            <h2 className="title-pulse text-4xl font-black leading-tight text-white sm:text-5xl lg:text-6xl">
               כל המחלקות
               <br />
               <span className="text-accent">מקום אחד!</span>

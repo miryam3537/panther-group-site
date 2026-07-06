@@ -77,6 +77,20 @@ html {
   animation-delay: calc(var(--char-delay, 0.75s));
 }
 
+/* ── Services section title pulse ──────────────────────────── */
+@keyframes title-pulse {
+  0%   { transform: scale(1);    opacity: 1;    }
+  25%  { transform: scale(1.35); opacity: 0.85; }
+  60%  { transform: scale(0.88); opacity: 0.7;  }
+  80%  { transform: scale(1.08); opacity: 0.9;  }
+  100% { transform: scale(1);    opacity: 1;    }
+}
+
+.title-pulse {
+  display: inline-block;
+  animation: title-pulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
 /* Subtle pulsing glow for high-conversion CTA buttons */
 @keyframes pulse-glow {
   0%, 100% {
