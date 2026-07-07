@@ -11,7 +11,7 @@ export const siteConfig = {
 
 export const navItems = [
   { label: "בית", href: "/" },
-  { label: "שירותים", href: "/services" },
+  { label: "מחלקות", href: "/services" },
   { label: "גלריה", href: "/gallery" },
   { label: "אודות", href: "/about" },
   { label: "המלצות", href: "/testimonials" },
