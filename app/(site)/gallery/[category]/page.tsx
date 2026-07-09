@@ -12,20 +12,6 @@ const categoryNames: Record<string, string> = {
   boards: "מחלקת לוחות פרסום",
 };
 
-/* Layout pattern repeats every 5 items — creates visual rhythm */
-function getItemClass(index: number): string {
-  const pos = index % 5;
-  if (pos === 0) return "col-span-2 row-span-2";
-  if (pos === 3) return "col-span-2";
-  return "";
-}
-
-function getAspectClass(index: number): string {
-  const pos = index % 5;
-  if (pos === 0) return "aspect-square";
-  if (pos === 3) return "aspect-[16/7]";
-  return "aspect-[4/3]";
-}
 
 export async function generateMetadata({
   params,
@@ -80,26 +66,40 @@ export default async function GalleryCategoryPage({
         </Container>
       </section>
 
-      {/* ── Editorial masonry grid ── */}
+      {/* ── Gallery grid ── */}
       <section className="bg-black pb-24 pt-2">
         <Container>
-          <div className="grid grid-cols-3 gap-2 sm:gap-3">
-            {placeholderImages.map((n, i) => (
+          {/* תמונה ראשית — רוחב מלא */}
+          <div className="group relative aspect-[16/7] w-full overflow-hidden rounded-2xl bg-zinc-900">
+            <div
+              className="absolute inset-0 transition-transform duration-700 group-hover:scale-105"
+              style={{
+                backgroundImage: "radial-gradient(ellipse at top right, hsl(30,70%,25%) 0%, transparent 65%), linear-gradient(135deg, #1c1c1c, #0a0a0a)",
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-6">
+              <p className="text-sm font-semibold text-white/70">תמונה 1</p>
+            </div>
+          </div>
+
+          {/* שורת תמונות קטנות */}
+          <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {placeholderImages.slice(1).map((n, i) => (
               <div
                 key={n}
-                className={`group relative overflow-hidden rounded-xl bg-zinc-900 ${getItemClass(i)} ${getAspectClass(i)}`}
+                className="group relative aspect-square overflow-hidden rounded-xl bg-zinc-900"
               >
                 <div
-                  className="absolute inset-0 bg-gradient-to-br from-zinc-800 via-zinc-900 to-black transition-transform duration-700 group-hover:scale-105"
+                  className="absolute inset-0 transition-transform duration-500 group-hover:scale-110"
                   style={{
-                    backgroundImage: `radial-gradient(ellipse at ${i % 2 === 0 ? "top right" : "bottom left"}, hsl(30,70%,25%) 0%, transparent 65%)`,
+                    backgroundImage: `radial-gradient(ellipse at ${i % 2 === 0 ? "top right" : "bottom left"}, hsl(30,70%,20%) 0%, transparent 70%), linear-gradient(135deg, #1c1c1c, #0a0a0a)`,
                   }}
                 />
-                <div className="absolute inset-0 bg-accent/0 transition-all duration-500 group-hover:bg-accent/8" />
-                <div className="absolute inset-x-0 bottom-0 translate-y-1 bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                  <p className="text-xs font-semibold text-white/80">תמונה {n}</p>
+                <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-accent/10" />
+                <div className="absolute inset-x-0 bottom-0 translate-y-2 p-3 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                  <p className="text-[10px] font-semibold text-white/80">תמונה {n}</p>
                 </div>
-                <div className="absolute right-3 top-3 h-1.5 w-1.5 rounded-full bg-accent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               </div>
             ))}
           </div>
