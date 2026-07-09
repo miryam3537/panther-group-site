@@ -90,10 +90,10 @@ export default async function HomePage() {
         <style>{`
           @keyframes galleryMarquee {
             0%   { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+            100% { transform: translateX(-3840px); }
           }
           .gallery-track {
-            animation: galleryMarquee 22s linear infinite;
+            animation: galleryMarquee 30s linear infinite;
           }
           .gallery-track:hover {
             animation-play-state: paused;
@@ -121,7 +121,7 @@ export default async function HomePage() {
         {/* Full-width marquee strip — no side padding */}
         <div className="overflow-hidden w-full">
           <div className="gallery-track flex w-max">
-            {[...galleryCategories, ...galleryCategories, ...galleryCategories, ...galleryCategories].map((cat, i) => (
+            {[...Array(8)].flatMap(() => galleryCategories).map((cat, i) => (
               <Link
                 key={`${cat.slug}-${i}`}
                 href={`/gallery/${cat.slug}`}
