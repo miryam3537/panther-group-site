@@ -10,7 +10,7 @@ import {
 } from "@/lib/animations";
 
 const BG_IMAGE =
-  "https://gwyeuaywrngqnkpfdecc.supabase.co/storage/v1/object/sign/HOMEPAJE/Gemini_Generated_Image_mj637mmj637mmj63%20(1).png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8zNWM5NDc3Ni0yZjA0LTQ3YjgtOWYzYy1hMjI2M2IwYjc0MDkiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJIT01FUEFKRS9HZW1pbmlfR2VuZXJhdGVkX0ltYWdlX21qNjM3bW1qNjM3bW1qNjMgKDEpLnBuZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODM2MDczMzMsImV4cCI6MTg0NjY3OTMzM30.EzLqNTPMkjjlCWOBAyGJqehpuWjA-UhSLTXoKLMa0Jk";
+  "https://gwyeuaywrngqnkpfdecc.supabase.co/storage/v1/object/public/HOMEPAJE/Gemini_Generated_Image_n192aon192aon192.png";
 
 export function Hero() {
   return (
