@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { ContactForm } from "@/components/sections/ContactForm";
+import { createServerSupabaseClient } from "@/lib/supabase-server";
 
 const categoryNames: Record<string, string> = {
   branding: "מחלקת מיתוג ופרסום",
@@ -11,7 +13,6 @@ const categoryNames: Record<string, string> = {
   digital: "מחלקת מדיה ודיגיטל",
   boards: "מחלקת לוחות פרסום",
 };
-
 
 export async function generateMetadata({
   params,
@@ -30,12 +31,19 @@ export default async function GalleryCategoryPage({
   const { category } = await params;
   const title = categoryNames[category] ?? "גלריה";
 
-  const placeholderImages = Array.from({ length: 10 }, (_, i) => i + 1);
+  const supabase = await createServerSupabaseClient();
+  const { data: images } = await supabase
+    .from("gallery_images")
+    .select("id, url")
+    .eq("category", category)
+    .order("display_order", { ascending: true });
+
+  const imgs = images ?? [];
 
   return (
     <>
       {/* ── Hero header ── */}
-      <section className="relative bg-black py-16 lg:py-24 overflow-hidden">
+      <section className="relative overflow-hidden bg-black py-16 lg:py-24">
         <div className="pointer-events-none absolute -top-40 right-1/4 h-96 w-96 rounded-full bg-accent/10 blur-3xl" />
 
         <Container>
@@ -69,40 +77,47 @@ export default async function GalleryCategoryPage({
       {/* ── Gallery grid ── */}
       <section className="bg-black pb-24 pt-2">
         <Container>
-          {/* תמונה ראשית — רוחב מלא */}
-          <div className="group relative aspect-[16/7] w-full overflow-hidden rounded-2xl bg-zinc-900">
-            <div
-              className="absolute inset-0 transition-transform duration-700 group-hover:scale-105"
-              style={{
-                backgroundImage: "radial-gradient(ellipse at top right, hsl(30,70%,25%) 0%, transparent 65%), linear-gradient(135deg, #1c1c1c, #0a0a0a)",
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 p-6">
-              <p className="text-sm font-semibold text-white/70">תמונה 1</p>
+          {imgs.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-white/8 bg-white/3 py-24 text-center">
+              <p className="text-sm text-white/30">אין תמונות בקטגוריה זו עדיין</p>
             </div>
-          </div>
-
-          {/* שורת תמונות קטנות */}
-          <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-            {placeholderImages.slice(1).map((n, i) => (
-              <div
-                key={n}
-                className="group relative aspect-square overflow-hidden rounded-xl bg-zinc-900"
-              >
-                <div
-                  className="absolute inset-0 transition-transform duration-500 group-hover:scale-110"
-                  style={{
-                    backgroundImage: `radial-gradient(ellipse at ${i % 2 === 0 ? "top right" : "bottom left"}, hsl(30,70%,20%) 0%, transparent 70%), linear-gradient(135deg, #1c1c1c, #0a0a0a)`,
-                  }}
+          ) : (
+            <>
+              {/* תמונה ראשית — רוחב מלא */}
+              <div className="group relative aspect-[16/7] w-full overflow-hidden rounded-2xl bg-zinc-900">
+                <Image
+                  src={imgs[0].url}
+                  alt={title}
+                  fill
+                  priority
+                  sizes="100vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-accent/10" />
-                <div className="absolute inset-x-0 bottom-0 translate-y-2 p-3 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                  <p className="text-[10px] font-semibold text-white/80">תמונה {n}</p>
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
-            ))}
-          </div>
+
+              {/* שורת תמונות קטנות */}
+              {imgs.length > 1 && (
+                <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+                  {imgs.slice(1).map((img) => (
+                    <div
+                      key={img.id}
+                      className="group relative aspect-square overflow-hidden rounded-xl bg-zinc-900"
+                    >
+                      <Image
+                        src={img.url}
+                        alt=""
+                        fill
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-accent/10" />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
         </Container>
       </section>
 

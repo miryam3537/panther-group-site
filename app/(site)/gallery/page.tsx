@@ -1,20 +1,42 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { ContactForm } from "@/components/sections/ContactForm";
+import { createServerSupabaseClient } from "@/lib/supabase-server";
 
 export const metadata: Metadata = { title: "גלריה" };
 
-const categories = [
-  { slug: "branding", title: "מיתוג ופרסום", count: 12 },
-  { slug: "promotions", title: 'הפקות וקד"מ', count: 18 },
-  { slug: "events", title: "הפקות אירועים", count: 24 },
-  { slug: "signage", title: "שילוט למוסדות", count: 9 },
-  { slug: "digital", title: "מדיה ודיגיטל", count: 15 },
-  { slug: "boards", title: "לוחות פרסום", count: 11 },
+const CATEGORIES = [
+  { slug: "branding", title: "מיתוג ופרסום" },
+  { slug: "promotions", title: 'הפקות וקד"מ' },
+  { slug: "events", title: "הפקות אירועים" },
+  { slug: "signage", title: "שילוט למוסדות" },
+  { slug: "digital", title: "מדיה ודיגיטל" },
+  { slug: "boards", title: "לוחות פרסום" },
 ];
 
-export default function GalleryPage() {
+export default async function GalleryPage() {
+  const supabase = await createServerSupabaseClient();
+
+  // Fetch first image + count per category
+  const categoryData = await Promise.all(
+    CATEGORIES.map(async (cat) => {
+      const { data, count } = await supabase
+        .from("gallery_images")
+        .select("url", { count: "exact" })
+        .eq("category", cat.slug)
+        .order("display_order", { ascending: true })
+        .limit(1);
+
+      return {
+        ...cat,
+        coverUrl: data?.[0]?.url ?? null,
+        count: count ?? 0,
+      };
+    })
+  );
+
   return (
     <>
       <section className="bg-black py-20 lg:py-28">
@@ -30,17 +52,25 @@ export default function GalleryPage() {
           </div>
 
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {categories.map((cat) => (
+            {categoryData.map((cat) => (
               <Link
                 key={cat.slug}
                 href={`/gallery/${cat.slug}`}
                 className="group relative aspect-video overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-accent/60"
               >
-                {/* Placeholder — replaced with next/image */}
-                <div className="absolute inset-0 bg-gradient-to-br from-card via-border/30 to-black" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                {cat.coverUrl ? (
+                  <Image
+                    src={cat.coverUrl}
+                    alt={cat.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-card via-border/30 to-black" />
+                )}
 
-                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 <div className="absolute inset-0 bg-accent/0 transition-all group-hover:bg-accent/10" />
 
                 <div className="absolute inset-x-0 bottom-0 p-4">
@@ -48,7 +78,7 @@ export default function GalleryPage() {
                     {cat.title}
                   </h2>
                   <p className="mt-0.5 text-xs text-white/50">
-                    {cat.count} תמונות
+                    {cat.count > 0 ? `${cat.count} תמונות` : "בקרוב"}
                   </p>
                 </div>
               </Link>
