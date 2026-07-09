@@ -86,9 +86,22 @@ export default async function HomePage() {
       <ServicesPreview />
 
       {/* ────────────── 4. Gallery Preview ────────────── */}
-      <section className="bg-background py-20 lg:py-28">
+      <section className="bg-background py-20 lg:py-28 overflow-hidden">
+        <style>{`
+          @keyframes galleryMarquee {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          .gallery-track {
+            animation: galleryMarquee 22s linear infinite;
+          }
+          .gallery-track:hover {
+            animation-play-state: paused;
+          }
+        `}</style>
+
         <Container>
-          <div className="flex items-end justify-between">
+          <div className="flex items-end justify-between mb-10">
             <Link
               href="/gallery"
               className="text-sm font-medium text-accent transition-colors hover:underline"
@@ -103,15 +116,17 @@ export default async function HomePage() {
               </h2>
             </div>
           </div>
+        </Container>
 
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
-            {galleryCategories.map((cat) => (
+        {/* Full-width marquee strip — no side padding */}
+        <div className="overflow-hidden w-full">
+          <div className="gallery-track flex w-max">
+            {[...galleryCategories, ...galleryCategories, ...galleryCategories, ...galleryCategories].map((cat, i) => (
               <Link
-                key={cat.slug}
+                key={`${cat.slug}-${i}`}
                 href={`/gallery/${cat.slug}`}
-                className="group relative aspect-video overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-accent/60"
+                className="group relative h-56 w-80 shrink-0 overflow-hidden border-l border-border/40 bg-card last:border-r transition-opacity hover:opacity-90"
               >
-                {/* Placeholder bg — replaced with next/image later */}
                 <div className="absolute inset-0 bg-gradient-to-br from-card via-border/40 to-card" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-4">
@@ -122,7 +137,7 @@ export default async function HomePage() {
               </Link>
             ))}
           </div>
-        </Container>
+        </div>
       </section>
 
       {/* ────────────── 5. Blog Preview ────────────── */}
