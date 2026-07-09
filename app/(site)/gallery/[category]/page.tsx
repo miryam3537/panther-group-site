@@ -14,6 +14,8 @@ const categoryNames: Record<string, string> = {
   boards: "מחלקת לוחות פרסום",
 };
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({
   params,
 }: {

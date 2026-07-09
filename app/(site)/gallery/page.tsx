@@ -5,6 +5,8 @@ import { Container } from "@/components/layout/Container";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = { title: "גלריה" };
 
 const CATEGORIES = [
