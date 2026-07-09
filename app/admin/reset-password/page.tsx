@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase";
 
@@ -35,9 +36,15 @@ export default function ResetPasswordPage() {
     <div className="flex min-h-screen items-center justify-center bg-black px-4">
       <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-white/4 p-8">
         {/* Logo */}
-        <div className="mb-8 text-center">
-          <span className="text-3xl font-black tracking-wide text-accent">פנתר</span>
-          <p className="mt-1 text-xs text-white/40">איפוס סיסמה</p>
+        <div className="mb-8 flex flex-col items-center gap-2">
+          <Image
+            src="https://gwyeuaywrngqnkpfdecc.supabase.co/storage/v1/object/public/HOMEPAJE/LOGO5.png"
+            alt="פנתר"
+            width={200}
+            height={120}
+            className="h-20 w-auto object-contain"
+          />
+          <p className="text-xs text-white/40">איפוס סיסמה</p>
         </div>
 
         {status === "sent" ? (

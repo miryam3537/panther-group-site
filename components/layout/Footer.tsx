@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUp, Phone, Mail } from "lucide-react";
 import { Container } from "@/components/layout/Container";
@@ -45,9 +46,13 @@ export function Footer() {
             {/* Col 1 — Logo */}
             <div className="flex flex-col items-start gap-2">
               <Link href="/" aria-label={`${siteConfig.name} — דף הבית`}>
-                <span className="text-2xl font-black tracking-tight text-white">
-                  {siteConfig.name}
-                </span>
+                <Image
+                  src="https://gwyeuaywrngqnkpfdecc.supabase.co/storage/v1/object/public/HOMEPAJE/LOGO5.png"
+                  alt={siteConfig.name}
+                  width={200}
+                  height={120}
+                  className="h-16 w-auto object-contain"
+                />
               </Link>
               <p className="text-xs text-white/60">{siteConfig.tagline}</p>
             </div>

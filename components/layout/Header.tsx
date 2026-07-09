@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { MobileNav } from "@/components/layout/MobileNav";
@@ -5,42 +6,15 @@ import { navItems, siteConfig } from "@/lib/site";
 
 function PantherLogo() {
   return (
-    <Link
-      href="/"
-      className="flex items-center gap-3"
-      aria-label={`${siteConfig.name} — דף הבית`}
-    >
-      {/* Text: RTL — name on right, tagline below */}
-      <div className="flex flex-col items-end leading-none">
-        <span className="text-2xl font-black tracking-wide text-accent">
-          {siteConfig.name}
-        </span>
-        <span className="mt-0.5 text-[11px] font-medium tracking-widest text-accent/60">
-          {siteConfig.tagline}
-        </span>
-      </div>
-
-      {/* Panther icon — simplified big-cat face silhouette */}
-      <svg
-        viewBox="0 0 44 44"
-        className="h-10 w-10 shrink-0 text-accent"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        {/* Left ear */}
-        <path d="M9 17 C9 13 12 5 16 6 C13 10 13 15 13 17 Z" />
-        {/* Right ear */}
-        <path d="M35 17 C35 13 32 5 28 6 C31 10 31 15 31 17 Z" />
-        {/* Head */}
-        <ellipse cx="22" cy="24" rx="14" ry="13" />
-        {/* Eyes — darker cutouts */}
-        <ellipse cx="16" cy="21" rx="2.8" ry="3.2" fill="#080808" />
-        <ellipse cx="28" cy="21" rx="2.8" ry="3.2" fill="#080808" />
-        {/* Muzzle */}
-        <ellipse cx="22" cy="29" rx="5" ry="3.5" fill="#080808" opacity="0.35" />
-        {/* Nose tip */}
-        <ellipse cx="22" cy="28" rx="2" ry="1.5" fill="#080808" opacity="0.6" />
-      </svg>
+    <Link href="/" aria-label={`${siteConfig.name} — דף הבית`}>
+      <Image
+        src="https://gwyeuaywrngqnkpfdecc.supabase.co/storage/v1/object/public/HOMEPAJE/LOGO5.png"
+        alt={siteConfig.name}
+        width={200}
+        height={120}
+        className="h-16 w-auto object-contain"
+        priority
+      />
     </Link>
   );
 }
