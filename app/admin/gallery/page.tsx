@@ -88,12 +88,14 @@ export default function AdminGalleryPage() {
       const path = `${activeCategory}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
       // Step 1: upload to storage
-      const { error: uploadError } = await supabase.storage
+      const storageResult = await supabase.storage
         .from("gallery")
         .upload(path, file, { cacheControl: "3600", upsert: false });
 
-      if (uploadError) {
-        setError(`❌ שגיאת Storage בהעלאת "${file.name}": ${uploadError.message}`);
+      console.log("📦 Storage upload result:", JSON.stringify(storageResult));
+
+      if (storageResult.error) {
+        setError(`❌ שגיאת Storage: ${storageResult.error.message}`);
         setUploading(false);
         return;
       }
@@ -103,16 +105,20 @@ export default function AdminGalleryPage() {
         .from("gallery")
         .getPublicUrl(path);
 
+      console.log("🔗 Public URL:", urlData.publicUrl);
+
       // Step 3: insert into DB
-      const { error: dbError } = await supabase.from("gallery_images").insert({
+      const dbResult = await supabase.from("gallery_images").insert({
         category: activeCategory,
         storage_path: path,
         url: urlData.publicUrl,
         display_order: images.length + uploaded + 1,
       });
 
-      if (dbError) {
-        setError(`❌ שגיאת DB בשמירת "${file.name}": ${dbError.message}`);
+      console.log("🗄️ DB insert result:", JSON.stringify(dbResult));
+
+      if (dbResult.error) {
+        setError(`❌ שגיאת DB: ${dbResult.error.message}`);
         setUploading(false);
         return;
       }
