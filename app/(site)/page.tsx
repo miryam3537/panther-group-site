@@ -120,6 +120,11 @@ export default async function HomePage() {
 
       {/* ────────────── 4. Gallery Preview ────────────── */}
       <section className="relative bg-zinc-950 py-20 lg:py-28 overflow-hidden">
+        {/* Faint logo watermark */}
+        <div
+          className="pointer-events-none absolute inset-0 z-0 bg-center bg-no-repeat bg-contain opacity-[0.04]"
+          style={{ backgroundImage: "url('https://gwyeuaywrngqnkpfdecc.supabase.co/storage/v1/object/public/HOMEPAJE/LOGO5.png')" }}
+        />
         <style>{`
           @keyframes marqueeL {
             0%   { transform: translateX(0); }
