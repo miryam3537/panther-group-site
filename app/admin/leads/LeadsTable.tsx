@@ -17,6 +17,38 @@ type Lead = {
 type StatusFilter = "all" | "pending" | "handled";
 type ServiceFilter = "all" | string;
 
+function exportToCsv(leads: Lead[]) {
+  const headers = ["תאריך", "שם", "טלפון", "אימייל", "שירות", "הודעה", "סטטוס"];
+
+  const rows = leads.map((l) => {
+    const svc = parseService(l.message);
+    const msg = stripServiceLine(l.message);
+    return [
+      new Date(l.created_at).toLocaleString("he-IL"),
+      l.name,
+      l.phone ?? "",
+      l.email ?? "",
+      svc ? (SERVICE_LABELS[svc] ?? svc) : "",
+      msg ?? "",
+      l.is_handled ? "טופל" : "ממתין",
+    ];
+  });
+
+  const csvContent =
+    "\uFEFF" +
+    [headers, ...rows]
+      .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+      .join("\n");
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `פניות-פנתר-${new Date().toLocaleDateString("he-IL").replace(/\//g, "-")}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 const SERVICE_LABELS: Record<string, string> = Object.fromEntries(
   services.map((s) => [s.id, s.title])
 );
@@ -94,6 +126,17 @@ export function LeadsTable({ initialLeads }: { initialLeads: Lead[] }) {
         <span className="mr-auto self-center text-xs text-white/30">
           {filtered.length} פניות
         </span>
+        <button
+          onClick={() => exportToCsv(filtered)}
+          disabled={filtered.length === 0}
+          className="flex items-center gap-1.5 rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-white/50 transition-all hover:border-emerald-500/40 hover:text-emerald-400 disabled:pointer-events-none disabled:opacity-30"
+          title="ייצוא לקובץ CSV (נפתח ב-Google Sheets)"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+          </svg>
+          ייצוא לגוגל שיטס
+        </button>
       </div>
 
       {/* Row 2 — Service category filter */}
