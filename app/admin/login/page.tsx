@@ -30,7 +30,7 @@ export default function AdminLoginPage() {
       return;
     }
 
-    router.push("/admin/leads");
+    router.push("/admin");
     router.refresh();
   }
 

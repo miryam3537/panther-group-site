@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import { LeadsTable } from "./LeadsTable";
@@ -53,14 +54,25 @@ export function LeadsClient() {
   return (
     <div className="min-h-screen bg-black text-white" dir="rtl">
       {/* Top bar */}
-      <header className="border-b border-white/8 bg-black/80 px-6 py-4 backdrop-blur">
+      <header className="border-b border-white/8 bg-black/80 px-6 py-4 backdrop-blur sticky top-0 z-20">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
-          <button
-            onClick={handleLogout}
-            className="rounded-lg border border-white/10 px-4 py-2 text-xs font-medium text-white/50 transition-colors hover:border-white/30 hover:text-white"
-          >
-            יציאה
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleLogout}
+              className="rounded-lg border border-white/10 px-4 py-2 text-xs font-medium text-white/50 transition-colors hover:border-white/30 hover:text-white"
+            >
+              יציאה
+            </button>
+            <Link
+              href="/admin"
+              className="flex items-center gap-1.5 rounded-lg border border-white/10 px-4 py-2 text-xs font-medium text-white/50 transition-colors hover:border-accent/40 hover:text-accent"
+            >
+              <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5">
+                <path fillRule="evenodd" d="M6.22 4.22a.75.75 0 011.06 0l3.25 3.25a.75.75 0 010 1.06l-3.25 3.25a.75.75 0 01-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 010-1.06z" clipRule="evenodd" />
+              </svg>
+              ממשק ניהול
+            </Link>
+          </div>
           <div className="flex items-center gap-3">
             <span className="text-2xl font-black text-accent">פנתר</span>
             <span className="text-xs text-white/30">|</span>

@@ -48,7 +48,7 @@ export default function UpdatePasswordPage() {
     }
 
     setStatus("success");
-    setTimeout(() => router.push("/admin/leads"), 2000);
+    setTimeout(() => router.push("/admin"), 2000);
   }
 
   return (
