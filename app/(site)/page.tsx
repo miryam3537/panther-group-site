@@ -44,12 +44,45 @@ const blogPosts = [
 ];
 
 
+type GalleryImg = { id: string; url: string; category: string };
+
+function GalleryCard({ img }: { img: GalleryImg }) {
+  return (
+    <Link
+      href={`/gallery/${img.category}`}
+      className="group relative mx-px h-60 w-60 shrink-0 overflow-hidden ring-1 ring-white/5 transition-all duration-300 hover:ring-accent/50 hover:scale-[1.03]"
+    >
+      <img
+        src={img.url}
+        alt={CATEGORY_LABELS[img.category] ?? img.category}
+        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+        loading="lazy"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 px-4 py-3">
+        <span className="rounded-full bg-accent/90 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white shadow-lg shadow-accent/30">
+          {CATEGORY_LABELS[img.category] ?? img.category}
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+const CATEGORY_LABELS: Record<string, string> = {
+  branding: "מיתוג ופרסום",
+  promotions: 'הפקות וקד"מ',
+  events: "הפקות אירועים",
+  signage: "שילוט למוסדות",
+  digital: "מדיה ודיגיטל",
+  boards: "לוחות פרסום",
+};
+
 export default async function HomePage() {
   const supabase = await createServerSupabaseClient();
-  const { data: services } = await supabase
-    .from("services")
-    .select("slug, title, description")
-    .order("sort_order");
+  const [{ data: services }, { data: galleryImages }] = await Promise.all([
+    supabase.from("services").select("slug, title, description").order("sort_order"),
+    supabase.from("gallery_images").select("id, url, category").limit(60),
+  ]);
 
   return (
     <>
@@ -86,58 +119,92 @@ export default async function HomePage() {
       <ServicesPreview />
 
       {/* ────────────── 4. Gallery Preview ────────────── */}
-      <section className="bg-background py-20 lg:py-28 overflow-hidden">
+      <section className="relative bg-zinc-950 py-20 lg:py-28 overflow-hidden">
         <style>{`
-          @keyframes galleryMarquee {
+          @keyframes marqueeL {
             0%   { transform: translateX(0); }
-            100% { transform: translateX(-3840px); }
+            100% { transform: translateX(-50%); }
           }
-          .gallery-track {
-            animation: galleryMarquee 30s linear infinite;
+          @keyframes marqueeR {
+            0%   { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
           }
-          .gallery-track:hover {
-            animation-play-state: paused;
-          }
+          .track-left  { animation: marqueeL 22s linear infinite; will-change: transform; }
+          .track-right { animation: marqueeR 26s linear infinite; will-change: transform; }
+          .track-left:hover, .track-right:hover { animation-play-state: paused; }
         `}</style>
 
+        {/* Subtle radial glow */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_50%,rgba(255,90,0,0.07),transparent)]" />
+
         <Container>
-          <div className="flex items-end justify-between mb-10">
+          <div className="flex items-end justify-between mb-12">
             <Link
               href="/gallery"
-              className="text-sm font-medium text-accent transition-colors hover:underline"
+              className="group flex items-center gap-1.5 text-sm font-semibold text-accent transition-all hover:gap-3"
               aria-label="לכל הגלריה"
             >
-              לכל הגלריה &#8592;
+              לכל הגלריה
+              <span className="transition-transform group-hover:-translate-x-1">&#8592;</span>
             </Link>
             <div className="text-right">
-              <p className="text-sm font-medium text-accent">עבודות שביצענו</p>
-              <h2 className="title-pulse title-pulse-d05 mt-1 text-3xl font-bold text-foreground sm:text-4xl">
+              <p className="text-sm font-semibold uppercase tracking-widest text-accent/80">עבודות שביצענו</p>
+              <h2 className="title-pulse title-pulse-d05 mt-1 text-3xl font-black text-white sm:text-4xl">
                 הגלריה שלנו
               </h2>
             </div>
           </div>
         </Container>
 
-        {/* Full-width marquee strip — no side padding */}
-        <div className="overflow-hidden w-full">
-          <div className="gallery-track flex w-max">
-            {[...Array(8)].flatMap(() => galleryCategories).map((cat, i) => (
-              <Link
-                key={`${cat.slug}-${i}`}
-                href={`/gallery/${cat.slug}`}
-                className="group relative h-56 w-80 shrink-0 overflow-hidden border-l border-border/40 bg-card last:border-r transition-opacity hover:opacity-90"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-card via-border/40 to-card" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-4">
-                  <h3 className="text-base font-bold text-white transition-colors group-hover:text-accent">
-                    {cat.title}
-                  </h3>
+        {galleryImages && galleryImages.length > 0 ? (() => {
+          const mid = Math.ceil(galleryImages.length / 2);
+          const row1 = galleryImages.slice(0, mid);
+          const row2 = galleryImages.slice(mid);
+          const safeRow2 = row2.length > 0 ? row2 : row1;
+          return (
+            <div className="flex flex-col gap-px">
+              {/* Row 1 — left */}
+              <div className="relative overflow-hidden">
+                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-32 bg-gradient-to-l from-zinc-950 to-transparent" />
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-32 bg-gradient-to-r from-zinc-950 to-transparent" />
+                <div className="flex w-max track-left">
+                  {[...row1, ...row1].map((img, i) => (
+                    <GalleryCard key={`r1-${img.id}-${i}`} img={img} />
+                  ))}
                 </div>
-              </Link>
-            ))}
+              </div>
+              {/* Row 2 — right (opposite direction) */}
+              <div className="relative overflow-hidden">
+                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-32 bg-gradient-to-l from-zinc-950 to-transparent" />
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-32 bg-gradient-to-r from-zinc-950 to-transparent" />
+                <div className="flex w-max track-right">
+                  {[...safeRow2, ...safeRow2].map((img, i) => (
+                    <GalleryCard key={`r2-${img.id}-${i}`} img={img} />
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        })() : (
+          <div className="relative overflow-hidden">
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-32 bg-gradient-to-l from-zinc-950 to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-32 bg-gradient-to-r from-zinc-950 to-transparent" />
+            <div className="flex w-max track-left">
+              {[...Array(6)].flatMap(() => galleryCategories).map((cat, i) => (
+                <Link
+                  key={`${cat.slug}-${i}`}
+                  href={`/gallery/${cat.slug}`}
+                  className="group relative mx-px h-56 w-72 shrink-0 overflow-hidden bg-zinc-900 ring-1 ring-white/5"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-4">
+                    <span className="text-sm font-bold text-white group-hover:text-accent transition-colors">{cat.title}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </section>
 
       {/* ────────────── 5. Blog Preview ────────────── */}
