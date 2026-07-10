@@ -81,36 +81,47 @@ export default function AdminGalleryPage() {
     setUploading(true);
     setError(null);
     const supabase = createClient();
+    let uploaded = 0;
 
     for (const file of fileArray) {
       const ext = file.name.split(".").pop();
       const path = `${activeCategory}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
+      // Step 1: upload to storage
       const { error: uploadError } = await supabase.storage
         .from("gallery")
         .upload(path, file, { cacheControl: "3600", upsert: false });
 
       if (uploadError) {
-        setError(`שגיאה בהעלאת ${file.name}: ${uploadError.message}`);
-        continue;
+        setError(`❌ שגיאת Storage בהעלאת "${file.name}": ${uploadError.message}`);
+        setUploading(false);
+        return;
       }
 
+      // Step 2: get public URL
       const { data: urlData } = supabase.storage
         .from("gallery")
         .getPublicUrl(path);
 
-      const nextOrder = images.length + 1;
-
-      await supabase.from("gallery_images").insert({
+      // Step 3: insert into DB
+      const { error: dbError } = await supabase.from("gallery_images").insert({
         category: activeCategory,
         storage_path: path,
         url: urlData.publicUrl,
-        display_order: nextOrder,
+        display_order: images.length + uploaded + 1,
       });
+
+      if (dbError) {
+        setError(`❌ שגיאת DB בשמירת "${file.name}": ${dbError.message}`);
+        setUploading(false);
+        return;
+      }
+
+      uploaded++;
     }
 
     setUploading(false);
-    showSuccess(`${fileArray.length} תמונות הועלו בהצלחה`);
+    showSuccess(`✅ ${uploaded} תמונות הועלו בהצלחה`);
     fetchImages();
   }
 
