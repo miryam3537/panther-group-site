@@ -129,3 +129,13 @@ body {
   color: var(--foreground);
   font-family: var(--font-heebo), Arial, sans-serif;
 }
+
+/* ── Gallery cycler — fade-in on image swap ─────────────────── */
+@keyframes gallery-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.gallery-fade-in {
+  animation: gallery-fade-in 0.7s ease-in-out both;
+}
