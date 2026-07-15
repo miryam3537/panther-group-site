@@ -113,7 +113,7 @@ export default async function ServicesPage() {
                     {num}
                   </span>
                   <div className="-mt-4">
-                    <p className="text-xs font-semibold uppercase tracking-widest text-accent/70">שירות</p>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-accent/70">מחלקה</p>
                     <h2 className={`mt-2 text-3xl font-black sm:text-4xl ${isDark ? "text-white" : "text-black"}`}>
                       {service.title}
                     </h2>
