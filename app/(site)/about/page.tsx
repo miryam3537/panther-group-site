@@ -156,6 +156,7 @@ export default function AboutPage() {
                   src="https://gwyeuaywrngqnkpfdecc.supabase.co/storage/v1/object/public/HOMEPAJE/ABOUT.png"
                   alt="צוות פנתר"
                   fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover"
                   priority
                 />

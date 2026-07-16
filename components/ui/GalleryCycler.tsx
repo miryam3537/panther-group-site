@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 
 type GalleryImg = { id: string; url: string; category: string };
@@ -62,12 +63,14 @@ export function GalleryCycler({ images }: { images: GalleryImg[] }) {
           href={`/gallery/${img.category}`}
           className="group relative aspect-[4/3] overflow-hidden rounded-xl bg-zinc-900"
         >
-          <img
+          <Image
             key={keys[i]}
             src={img.url}
             alt={LABELS[img.category] ?? img.category}
-            loading="eager"
-            className="gallery-fade-in h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            priority={i === 0}
+            className="gallery-fade-in object-cover transition-transform duration-500 group-hover:scale-105"
           />
           {/* Permanent subtle bottom tint so images always look polished */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
