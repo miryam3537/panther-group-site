@@ -68,7 +68,7 @@ export default async function HomePage() {
           <div className="mt-10 flex justify-center">
             <Link
               href="/methodology"
-              className="pulse-glow inline-flex items-center rounded-2xl bg-accent px-10 py-5 text-lg font-black text-white shadow-xl shadow-accent/40 transition-all hover:bg-orange-600 hover:scale-105 active:scale-95 sm:px-14 sm:py-6 sm:text-xl"
+              className="pulse-glow inline-flex items-center rounded-2xl bg-accent px-6 py-4 text-base font-black text-white shadow-xl shadow-accent/40 transition-all hover:bg-orange-600 hover:scale-105 active:scale-95 sm:px-10 sm:py-5 sm:text-lg lg:px-14 lg:py-6 lg:text-xl"
             >
               רוצים לזנק? הכירו את השיטה של פנתר &#187;&#187;
             </Link>

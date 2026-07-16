@@ -74,12 +74,12 @@ export function GalleryCycler({ images }: { images: GalleryImg[] }) {
           />
           {/* Permanent subtle bottom tint so images always look polished */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-          {/* Hover reveal */}
-          <div className="absolute inset-x-0 bottom-0 translate-y-2 p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+          {/* Label: always visible on touch (mobile), hover-reveal on desktop */}
+          <div className="absolute inset-x-0 bottom-0 p-3 sm:translate-y-2 sm:p-4 sm:opacity-0 sm:transition-all sm:duration-300 sm:group-hover:translate-y-0 sm:group-hover:opacity-100">
             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent">
               {LABELS[img.category] ?? img.category}
             </span>
-            <p className="mt-0.5 text-xs font-semibold text-white/90">צפייה בפרויקט ←</p>
+            <p className="mt-0.5 hidden text-xs font-semibold text-white/90 sm:block">צפייה בפרויקט ←</p>
           </div>
         </Link>
       ))}
