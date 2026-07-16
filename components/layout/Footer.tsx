@@ -108,9 +108,17 @@ export function Footer() {
 
         <div className="border-t border-white/10">
           <Container className="py-4">
-            <p className="text-center text-xs text-white/40">
-              © {year} {siteConfig.name} פרסום. כל הזכויות שמורות.
-            </p>
+            <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-between" dir="rtl">
+              <p className="text-xs text-white/40">
+                © {year} {siteConfig.name} פרסום. כל הזכויות שמורות.
+              </p>
+              <Link
+                href="/accessibility"
+                className="text-xs text-white/40 transition-colors hover:text-white/70"
+              >
+                הצהרת נגישות
+              </Link>
+            </div>
           </Container>
         </div>
       </footer>
