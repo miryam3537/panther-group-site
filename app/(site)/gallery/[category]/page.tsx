@@ -43,6 +43,10 @@ export default async function GalleryCategoryPage({
   const heroImageUrl = serviceData?.image_url ?? null;
   const description = serviceData?.description ?? null;
   const imgs = images ?? [];
+  // Branding gallery: nearly-square corners; other departments keep rounded look
+  const isBranding = category === "branding";
+  const featuredRadius = isBranding ? "rounded-sm" : "rounded-2xl";
+  const gridRadius = isBranding ? "rounded-sm" : "rounded-xl";
 
   return (
     <>
@@ -190,7 +194,7 @@ export default async function GalleryCategoryPage({
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
               {/* First image — featured, spans 2 cols + 2 rows */}
               {imgs[0] && (
-                <div className="group relative col-span-2 row-span-2 aspect-square overflow-hidden rounded-2xl bg-zinc-900 sm:aspect-auto sm:h-full">
+                <div className={`group relative col-span-2 row-span-2 aspect-square overflow-hidden ${featuredRadius} bg-zinc-900 sm:aspect-auto sm:h-full`}>
                   <Image
                     src={imgs[0].url}
                     alt=""
@@ -199,7 +203,7 @@ export default async function GalleryCategoryPage({
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                  <div className="absolute inset-0 border-2 border-transparent transition-all duration-300 group-hover:border-accent/30 rounded-2xl" />
+                  <div className={`absolute inset-0 border-2 border-transparent transition-all duration-300 group-hover:border-accent/30 ${featuredRadius}`} />
                 </div>
               )}
 
@@ -207,7 +211,7 @@ export default async function GalleryCategoryPage({
               {imgs.slice(1).map((img) => (
                 <div
                   key={img.id}
-                  className="group relative aspect-square overflow-hidden rounded-xl bg-zinc-900"
+                  className={`group relative aspect-square overflow-hidden ${gridRadius} bg-zinc-900`}
                 >
                   <Image
                     src={img.url}
@@ -218,7 +222,7 @@ export default async function GalleryCategoryPage({
                   />
                   {/* Hover overlay */}
                   <div className="absolute inset-0 bg-black/0 transition-all duration-400 group-hover:bg-accent/8" />
-                  <div className="absolute inset-0 border border-transparent transition-all duration-300 group-hover:border-accent/25 rounded-xl" />
+                  <div className={`absolute inset-0 border border-transparent transition-all duration-300 group-hover:border-accent/25 ${gridRadius}`} />
                 </div>
               ))}
             </div>
