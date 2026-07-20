@@ -19,8 +19,8 @@ export const metadata: Metadata = {
   description:
     "פנתר פרסום — מזניקים את העסק שלך קדימה. מיתוג, עיצוב, דיגיטל, הפקות אירועים ולוחות פרסום.",
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: "/FAVICON.png",
+    apple: "/FAVICON.png",
   },
   openGraph: {
     siteName: "Panther Group",
