@@ -49,9 +49,9 @@ export function Footer() {
                 <Image
                   src="https://gwyeuaywrngqnkpfdecc.supabase.co/storage/v1/object/public/HOMEPAJE/LOGO5.png"
                   alt={siteConfig.name}
-                  width={200}
-                  height={120}
-                  className="h-16 w-auto object-contain"
+                  width={280}
+                  height={168}
+                  className="h-20 w-auto object-contain lg:h-24"
                 />
               </Link>
               <p className="text-xs text-white/60">{siteConfig.tagline}</p>

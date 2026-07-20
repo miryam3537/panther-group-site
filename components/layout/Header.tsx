@@ -10,9 +10,9 @@ function PantherLogo() {
       <Image
         src="https://gwyeuaywrngqnkpfdecc.supabase.co/storage/v1/object/public/HOMEPAJE/LOGO5.png"
         alt={siteConfig.name}
-        width={200}
-        height={120}
-        className="h-16 w-auto object-contain"
+        width={280}
+        height={168}
+        className="h-20 w-auto object-contain lg:h-24"
         priority
       />
     </Link>
@@ -29,7 +29,7 @@ export function Header() {
           middle child → CENTER (Nav)
           last child → LEFT (CTA + MobileNav)
         */}
-        <div className="flex h-16 items-center justify-between lg:h-20">
+        <div className="flex h-20 items-center justify-between lg:h-24">
           {/* Logo — RIGHT in RTL */}
           <PantherLogo />
 
