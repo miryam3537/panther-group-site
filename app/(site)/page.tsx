@@ -44,7 +44,7 @@ export default async function HomePage() {
   const supabase = await createServerSupabaseClient();
   const [{ data: services }, { data: galleryImages }] = await Promise.all([
     supabase.from("services").select("slug, title, description").order("sort_order"),
-    supabase.from("gallery_images").select("id, url, category").limit(60),
+    supabase.from("gallery_images").select("id, url, category").limit(16),
   ]);
 
   return (
