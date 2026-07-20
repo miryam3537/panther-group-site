@@ -69,6 +69,7 @@ export function LeadsTable({ initialLeads }: { initialLeads: Lead[] }) {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [serviceFilter, setServiceFilter] = useState<ServiceFilter>("all");
   const [toggling, setToggling] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   const filtered = leads.filter((l) => {
     const statusOk =
@@ -101,6 +102,21 @@ export function LeadsTable({ initialLeads }: { initialLeads: Lead[] }) {
       );
     }
     setToggling(null);
+  }
+
+  async function deleteLead(lead: Lead) {
+    if (!window.confirm(`למחוק את הפנייה של ${lead.name}? לא ניתן לבטל.`)) {
+      return;
+    }
+    setDeleting(lead.id);
+    const supabase = createClient();
+    const { error } = await supabase.from("leads").delete().eq("id", lead.id);
+    if (!error) {
+      setLeads((prev) => prev.filter((l) => l.id !== lead.id));
+    } else {
+      alert("מחיקה נכשלה. ייתכן שחסרה הרשאת מחיקה ב-Supabase.");
+    }
+    setDeleting(null);
   }
 
   const usedServices = [...new Set(leads.map((l) => parseService(l.message)).filter(Boolean))];
@@ -196,6 +212,7 @@ export function LeadsTable({ initialLeads }: { initialLeads: Lead[] }) {
                 <th className="px-5 py-3 font-medium">שירות</th>
                 <th className="px-5 py-3 font-medium">הודעה</th>
                 <th className="px-5 py-3 font-medium">סטטוס</th>
+                <th className="px-5 py-3 font-medium">פעולות</th>
               </tr>
             </thead>
             <tbody>
@@ -254,6 +271,17 @@ export function LeadsTable({ initialLeads }: { initialLeads: Lead[] }) {
                           : lead.is_handled
                             ? "✓ טופל"
                             : "סמן טופל"}
+                      </button>
+                    </td>
+                    <td className="px-5 py-4">
+                      <button
+                        type="button"
+                        onClick={() => deleteLead(lead)}
+                        disabled={deleting === lead.id}
+                        className="rounded-full border border-red-500/30 px-3 py-1.5 text-xs font-semibold text-red-400 transition-all hover:bg-red-500/15 active:scale-95 disabled:opacity-50"
+                        title="מחק פנייה"
+                      >
+                        {deleting === lead.id ? "..." : "מחק"}
                       </button>
                     </td>
                   </tr>

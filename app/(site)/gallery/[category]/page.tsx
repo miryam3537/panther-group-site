@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { ContactForm } from "@/components/sections/ContactForm";
+import { CategoryGalleryGrid } from "@/components/ui/CategoryGalleryGrid";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 
 const categoryNames: Record<string, string> = {
@@ -43,10 +44,7 @@ export default async function GalleryCategoryPage({
   const heroImageUrl = serviceData?.image_url ?? null;
   const description = serviceData?.description ?? null;
   const imgs = images ?? [];
-  // Branding gallery: nearly-square corners; other departments keep rounded look
   const isBranding = category === "branding";
-  const featuredRadius = isBranding ? "rounded-sm" : "rounded-2xl";
-  const gridRadius = isBranding ? "rounded-sm" : "rounded-xl";
 
   return (
     <>
@@ -191,41 +189,7 @@ export default async function GalleryCategoryPage({
               <p className="text-sm text-white/25">אין תמונות בקטגוריה זו עדיין</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
-              {/* First image — featured, spans 2 cols + 2 rows */}
-              {imgs[0] && (
-                <div className={`group relative col-span-2 row-span-2 aspect-square overflow-hidden ${featuredRadius} bg-zinc-900 sm:aspect-auto sm:h-full`}>
-                  <Image
-                    src={imgs[0].url}
-                    alt=""
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 66vw, 50vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                  <div className={`absolute inset-0 border-2 border-transparent transition-all duration-300 group-hover:border-accent/30 ${featuredRadius}`} />
-                </div>
-              )}
-
-              {/* Rest of images — uniform squares */}
-              {imgs.slice(1).map((img) => (
-                <div
-                  key={img.id}
-                  className={`group relative aspect-square overflow-hidden ${gridRadius} bg-zinc-900`}
-                >
-                  <Image
-                    src={img.url}
-                    alt=""
-                    fill
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  {/* Hover overlay */}
-                  <div className="absolute inset-0 bg-black/0 transition-all duration-400 group-hover:bg-accent/8" />
-                  <div className={`absolute inset-0 border border-transparent transition-all duration-300 group-hover:border-accent/25 ${gridRadius}`} />
-                </div>
-              ))}
-            </div>
+            <CategoryGalleryGrid images={imgs} isBranding={isBranding} />
           )}
 
           {/* CTA strip */}
