@@ -22,8 +22,12 @@ export function Hero() {
         backgroundPosition: "center",
       }}
     >
-      {/* Dark overlay for readability */}
-      <div className="pointer-events-none absolute inset-0 bg-black/65" aria-hidden="true" />
+      {/* Soft overlay — lighter so the photo stays bright, text still readable */}
+      <div className="pointer-events-none absolute inset-0 bg-black/35" aria-hidden="true" />
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-l from-black/45 via-black/20 to-transparent"
+        aria-hidden="true"
+      />
 
       {/* Orange radial glow — bottom-left */}
       <div
