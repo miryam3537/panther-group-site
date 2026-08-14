@@ -40,7 +40,7 @@ export function Header() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-sm font-medium text-muted transition-colors hover:text-accent"
+                    className="text-base font-medium text-muted transition-colors hover:text-accent"
                   >
                     {item.label}
                   </Link>
@@ -53,7 +53,7 @@ export function Header() {
           <div className="flex items-center gap-3">
             <Link
               href="/contact"
-              className="hidden items-center rounded-full border border-accent px-5 py-2.5 text-sm font-bold text-accent transition-all hover:bg-accent hover:text-white lg:inline-flex"
+              className="hidden items-center rounded-full border border-accent px-5 py-2.5 text-base font-bold text-accent transition-all hover:bg-accent hover:text-white lg:inline-flex"
             >
               להצעת מחיר &#171;&#171;
             </Link>

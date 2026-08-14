@@ -54,7 +54,7 @@ export default async function GalleryPage() {
           </div>
 
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {categoryData.map((cat) => (
+            {categoryData.map((cat, idx) => (
               <Link
                 key={cat.slug}
                 href={`/gallery/${cat.slug}`}
@@ -66,6 +66,7 @@ export default async function GalleryPage() {
                     alt={cat.title}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    priority={idx === 0}
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 ) : (

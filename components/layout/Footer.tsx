@@ -54,12 +54,12 @@ export function Footer() {
                   className="h-20 w-auto object-contain lg:h-24"
                 />
               </Link>
-              <p className="text-xs text-white/60">{siteConfig.tagline}</p>
+              <p className="text-sm text-white/70">{siteConfig.tagline}</p>
             </div>
 
             {/* Col 2 — Nav */}
             <div>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-white/50">
+              <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-white/55">
                 ניווט
               </p>
               <ul className="flex flex-wrap gap-x-5 gap-y-2">
@@ -67,7 +67,7 @@ export function Footer() {
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className="text-sm text-white/70 transition-colors hover:text-white"
+                      className="text-base text-white/75 transition-colors hover:text-white"
                     >
                       {item.label}
                     </Link>
@@ -78,25 +78,25 @@ export function Footer() {
 
             {/* Col 3 — Contact */}
             <div>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-white/50">
+              <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-white/55">
                 צור קשר
               </p>
               <ul className="flex flex-col gap-2">
                 <li>
                   <a
                     href={`tel:${siteConfig.phone}`}
-                    className="inline-flex items-center gap-2 text-sm text-white/70 transition-colors hover:text-white"
+                    className="inline-flex items-center gap-2 text-base text-white/75 transition-colors hover:text-white"
                   >
-                    <Phone className="h-3.5 w-3.5 shrink-0" />
+                    <Phone className="h-4 w-4 shrink-0" />
                     {siteConfig.phone}
                   </a>
                 </li>
                 <li>
                   <a
                     href={`mailto:${siteConfig.email}`}
-                    className="inline-flex items-center gap-2 text-sm text-white/70 transition-colors hover:text-white"
+                    className="inline-flex items-center gap-2 text-base text-white/75 transition-colors hover:text-white"
                   >
-                    <Mail className="h-3.5 w-3.5 shrink-0" />
+                    <Mail className="h-4 w-4 shrink-0" />
                     {siteConfig.email}
                   </a>
                 </li>
@@ -109,20 +109,20 @@ export function Footer() {
         <div className="border-t border-white/10">
           <Container className="py-4">
             <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-between" dir="rtl">
-              <p className="text-xs text-white/40">
+              <p className="text-sm text-white/45">
                 © {year} {siteConfig.name} פרסום. כל הזכויות שמורות.
               </p>
               <div className="flex items-center gap-4">
                 <Link
                   href="/privacy"
-                  className="text-xs text-white/40 transition-colors hover:text-white/70"
+                  className="text-sm text-white/45 transition-colors hover:text-white/70"
                 >
                   מדיניות פרטיות
                 </Link>
                 <span className="text-white/20">·</span>
                 <Link
                   href="/accessibility"
-                  className="text-xs text-white/40 transition-colors hover:text-white/70"
+                  className="text-sm text-white/45 transition-colors hover:text-white/70"
                 >
                   הצהרת נגישות
                 </Link>

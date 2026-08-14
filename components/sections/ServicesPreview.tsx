@@ -119,12 +119,12 @@ export function ServicesPreview() {
               <br />
               <span className="title-pulse title-pulse-d03 inline-block text-accent">מקום אחד!</span>
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-muted">
+            <p className="mt-4 text-base leading-relaxed text-muted">
               פנתר מציעה פתרון שלם — מהתכנון ועד הביצוע, הכל תחת קורת גג אחת.
             </p>
             <Link
               href="/services"
-              className="btn-cta mt-8 inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-bold text-white transition-colors hover:bg-accent-hover"
+              className="btn-cta mt-8 inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-base font-bold text-white transition-colors hover:bg-accent-hover"
             >
               לכל המחלקות &#171;&#171;
             </Link>
@@ -141,7 +141,7 @@ export function ServicesPreview() {
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent/10 text-accent transition-colors group-hover:bg-accent group-hover:text-white">
                   {serviceIcons[service.id]}
                 </span>
-                <span className="text-right text-sm font-bold text-foreground group-hover:text-accent transition-colors">
+                <span className="text-right text-base font-bold text-foreground group-hover:text-accent transition-colors">
                   {service.title}
                 </span>
               </Link>

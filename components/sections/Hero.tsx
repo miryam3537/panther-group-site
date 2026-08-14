@@ -10,7 +10,7 @@ import {
 } from "@/lib/animations";
 
 const BG_IMAGE =
-  "https://gwyeuaywrngqnkpfdecc.supabase.co/storage/v1/object/public/HOMEPAJE/Gemini_Generated_Image_n192aon192aon192.png";
+  "https://gwyeuaywrngqnkpfdecc.supabase.co/storage/v1/object/public/HOMEPAJE/panterhome.jpg";
 
 export function Hero() {
   return (
@@ -56,7 +56,7 @@ export function Hero() {
             </h1>
 
             <motion.p
-              className="mt-6 text-base font-medium text-white/70 sm:text-lg"
+              className="mt-6 text-lg font-medium text-white/80 sm:text-xl"
               variants={staggerItem}
             >
               מיתוג ופרסום&nbsp;&bull;&nbsp;הפקות אירועים&nbsp;&bull;&nbsp;מדיה דיגיטל
@@ -69,7 +69,7 @@ export function Hero() {
               <motion.div {...tapScale}>
                 <Link
                   href="/gallery"
-                  className="rounded-full border border-white/30 px-7 py-3.5 text-sm font-medium text-white transition-colors hover:border-accent hover:text-accent"
+                  className="rounded-full border border-white/30 px-7 py-3.5 text-base font-medium text-white transition-colors hover:border-accent hover:text-accent"
                 >
                   לגלריה
                 </Link>
@@ -78,7 +78,7 @@ export function Hero() {
               <motion.div {...tapScale}>
                 <Link
                   href="/contact"
-                  className="rounded-full bg-accent px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-accent/30 transition-colors hover:bg-accent-hover"
+                  className="rounded-full bg-accent px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-accent/30 transition-colors hover:bg-accent-hover"
                 >
                   להצעת מחיר &#171;&#171;
                 </Link>

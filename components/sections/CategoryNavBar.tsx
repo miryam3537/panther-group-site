@@ -48,6 +48,16 @@ const defaultIcon = (
   </svg>
 );
 
+/** Short homepage blurbs — keep cards clean and readable */
+const shortDescriptions: Record<string, string> = {
+  branding: "מיתוג, לוגו וזהות ויזואלית",
+  promotions: 'חומרי קד"מ והפקות מיוחדות',
+  events: "הפקת אירועים מקצה לקצה",
+  signage: "שילוט למוסדות ועסקים",
+  digital: "שיווק ומדיה דיגיטלית",
+  boards: "לוחות פרסום וחוצות",
+};
+
 export function CategoryNavBar({ services }: { services?: ServiceItem[] }) {
   const cats = services ?? [];
 
@@ -56,10 +66,10 @@ export function CategoryNavBar({ services }: { services?: ServiceItem[] }) {
       <Container>
         {/* Header */}
         <div className="mb-8 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent/70">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent/70">
             המחלקות שלנו
           </p>
-          <h2 className="mt-1 text-2xl font-black text-white sm:text-3xl">
+          <h2 className="mt-2 text-3xl font-black text-white sm:text-4xl">
             בחר מחלקה — נזניק אותך קדימה
           </h2>
         </div>
@@ -95,19 +105,20 @@ export function CategoryNavBar({ services }: { services?: ServiceItem[] }) {
               </span>
 
               {/* Text */}
-              <span className="relative z-10 flex flex-col gap-1">
-                <span className="text-sm font-black leading-tight text-white transition-colors group-hover:text-accent">
+              <span className="relative z-10 flex flex-col gap-1.5">
+                <span className="text-base font-black leading-tight text-white transition-colors group-hover:text-accent">
                   {cat.title}
                 </span>
-                {cat.description && (
-                  <span className="hidden text-[11px] leading-snug text-white/40 transition-colors group-hover:text-white/70 lg:block">
-                    {cat.description}
-                  </span>
-                )}
+                <span className="hidden text-sm leading-snug text-white/55 transition-colors group-hover:text-white/80 lg:block">
+                  {shortDescriptions[cat.slug] ??
+                    (cat.description
+                      ? cat.description.slice(0, 36) + (cat.description.length > 36 ? "…" : "")
+                      : null)}
+                </span>
               </span>
 
               {/* Arrow */}
-              <span className="relative z-10 mt-auto text-xs text-white/20 transition-all duration-300 group-hover:translate-x-[-3px] group-hover:text-accent">
+              <span className="relative z-10 mt-auto text-sm text-white/30 transition-all duration-300 group-hover:translate-x-[-3px] group-hover:text-accent">
                 &#171;&#171;
               </span>
             </Link>

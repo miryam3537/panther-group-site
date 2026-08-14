@@ -271,7 +271,6 @@ panther-agency/
 │   │   └── CTA.tsx                    # Call-to-action section
 │   └── ui/
 │       ├── GalleryCycler.tsx          # רכיב cycling לגלריית ה-homepage
-│       ├── AutoScroll.tsx             # Smooth scroll behavior
 │       ├── AnimatedSection.tsx        # Wrapper לאנימציות scroll-triggered
 │       └── Button.tsx                 # כפתור מותאם אישית
 └── lib/

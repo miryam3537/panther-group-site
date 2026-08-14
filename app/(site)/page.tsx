@@ -5,7 +5,6 @@ import { CategoryNavBar } from "@/components/sections/CategoryNavBar";
 import { ServicesPreview } from "@/components/sections/ServicesPreview";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { WhyPantherCards } from "@/components/sections/WhyPantherCards";
-import { AutoScroll } from "@/components/ui/AutoScroll";
 import { GalleryCycler } from "@/components/ui/GalleryCycler";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 
@@ -49,8 +48,6 @@ export default async function HomePage() {
 
   return (
     <>
-      <AutoScroll />
-
       {/* ────────────── 1. Hero ────────────── */}
       <Hero />
 
@@ -89,13 +86,13 @@ export default async function HomePage() {
         <Container>
           {/* Header */}
           <div className="mb-12 text-center">
-            <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.3em] text-accent/70">
+            <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-accent/70">
               עבודות שביצענו
             </p>
             <h2 className="title-pulse text-4xl font-black text-white sm:text-5xl">
               הגלריה שלנו
             </h2>
-            <p className="mx-auto mt-4 max-w-xs text-sm leading-relaxed text-zinc-500">
+            <p className="mx-auto mt-4 max-w-md text-base leading-relaxed text-zinc-400">
               כל פרויקט הוא סיפור — של מותג, של אירוע, של רגע שנשאר.
             </p>
           </div>
@@ -107,7 +104,7 @@ export default async function HomePage() {
           <div className="mt-10 flex justify-center">
             <Link
               href="/gallery"
-              className="group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:border-accent/50 hover:bg-accent"
+              className="group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-8 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-all hover:border-accent/50 hover:bg-accent"
             >
               לצפייה בכל הפרויקטים
               <span className="transition-transform group-hover:-translate-x-1">←</span>
@@ -122,13 +119,13 @@ export default async function HomePage() {
           <div className="flex items-end justify-between">
             <Link
               href="/blog"
-              className="text-sm font-medium text-accent transition-colors hover:underline"
+              className="text-base font-medium text-accent transition-colors hover:underline"
               aria-label="לכל המאמרים"
             >
               לכל המאמרים &#8592;
             </Link>
             <div className="text-right">
-              <p className="text-sm font-medium text-accent">מהבלוג שלנו</p>
+              <p className="text-base font-medium text-accent">מהבלוג שלנו</p>
               <h2 className="title-pulse title-pulse-d10 mt-1 text-3xl font-bold text-foreground sm:text-4xl">
                 מאמרים אחרונים
               </h2>
@@ -143,19 +140,19 @@ export default async function HomePage() {
               >
                 <time
                   dateTime={post.date}
-                  className="text-xs text-muted"
+                  className="text-sm text-muted"
                 >
                   {post.date}
                 </time>
-                <h3 className="mt-3 text-base font-bold text-foreground transition-colors group-hover:text-accent">
+                <h3 className="mt-3 text-lg font-bold text-foreground transition-colors group-hover:text-accent">
                   {post.title}
                 </h3>
-                <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted">
+                <p className="mt-2 line-clamp-3 text-base leading-relaxed text-muted">
                   {post.excerpt}
                 </p>
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="mt-4 inline-flex text-sm font-medium text-accent hover:underline"
+                  className="mt-4 inline-flex text-base font-medium text-accent hover:underline"
                 >
                   קרא עוד &#8592;
                 </Link>

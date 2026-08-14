@@ -90,7 +90,7 @@ export function WhyPantherCards() {
         <h3 className="text-2xl font-black text-white">
           <StaggeredTitle text="מעטפת מלאה" baseDelay={0.75} />
         </h3>
-        <p className="mt-2 text-sm text-white/80">פתרון שלם מהתכנון ועד הביצוע</p>
+        <p className="mt-2 text-base text-white/80">פתרון שלם מהתכנון ועד הביצוע</p>
       </div>
 
       {/* Card 2 — animates at 0.35s; letters start at 1.00s */}
@@ -114,7 +114,7 @@ export function WhyPantherCards() {
         <h3 className="text-2xl font-black text-white">
           <StaggeredTitle text="מחירים הוגנים" baseDelay={1.0} />
         </h3>
-        <p className="mt-2 text-sm text-white/80">תמחור שקוף ותחרותי לכל תקציב</p>
+        <p className="mt-2 text-base text-white/80">תמחור שקוף ותחרותי לכל תקציב</p>
       </div>
 
       {/* Card 3 — animates at 0.60s; letters start at 1.25s */}
@@ -138,7 +138,7 @@ export function WhyPantherCards() {
         <h3 className="text-2xl font-black text-black">
           <StaggeredTitle text="זמינות גבוהה" baseDelay={1.25} />
         </h3>
-        <p className="mt-3 text-sm leading-relaxed text-gray-600">
+        <p className="mt-3 text-base leading-relaxed text-gray-600">
           מענה מהיר
           <br />
           תמיד כאן בשבילך
