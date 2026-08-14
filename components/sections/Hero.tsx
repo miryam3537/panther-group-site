@@ -23,19 +23,19 @@ export function Hero() {
         backgroundPosition: "28% center",
       }}
     >
-      {/* Soft overlay — stronger on the right so text stays readable */}
-      <div className="pointer-events-none absolute inset-0 bg-black/30" aria-hidden="true" />
+      {/* Light overlays — keep photo bright, soft shade only behind text */}
+      <div className="pointer-events-none absolute inset-0 bg-black/10" aria-hidden="true" />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-l from-black/70 via-black/35 to-transparent"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-l from-black/45 via-black/15 to-transparent"
         aria-hidden="true"
       />
 
-      {/* Orange radial glow — bottom-left near the van */}
+      {/* Soft orange warmth — bottom-left near the van */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 70% 55% at 28% 110%, rgba(249,115,22,0.30) 0%, transparent 65%)",
+            "radial-gradient(ellipse 70% 55% at 28% 110%, rgba(249,115,22,0.18) 0%, transparent 65%)",
         }}
         aria-hidden="true"
       />
