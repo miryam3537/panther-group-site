@@ -19,17 +19,18 @@ export function Hero() {
       style={{
         backgroundImage: `url('${BG_IMAGE}')`,
         backgroundSize: "cover",
-        backgroundPosition: "center",
+        /* Keep the van on the left; leave room for text on the right */
+        backgroundPosition: "28% center",
       }}
     >
-      {/* Soft overlay — lighter so the photo stays bright, text still readable */}
-      <div className="pointer-events-none absolute inset-0 bg-black/35" aria-hidden="true" />
+      {/* Soft overlay — stronger on the right so text stays readable */}
+      <div className="pointer-events-none absolute inset-0 bg-black/30" aria-hidden="true" />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-l from-black/45 via-black/20 to-transparent"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-l from-black/70 via-black/35 to-transparent"
         aria-hidden="true"
       />
 
-      {/* Orange radial glow — bottom-left */}
+      {/* Orange radial glow — bottom-left near the van */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -39,54 +40,50 @@ export function Hero() {
         aria-hidden="true"
       />
 
-      <Container className="relative z-10 flex min-h-[92vh] items-center py-20">
-        <div className="w-full">
+      <Container className="relative z-10 flex min-h-[92vh] items-center justify-start py-20">
+        {/* Right side in RTL — clears the van on the left */}
+        <motion.div
+          className="w-full max-w-md text-right sm:max-w-lg lg:max-w-xl lg:ps-2"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+        >
+          <h1 className="text-[clamp(3.25rem,8vw,6.5rem)] font-black leading-none tracking-tighter text-white">
+            <motion.span className="block" variants={staggerItem}>זינוק</motion.span>
+            <motion.span className="block" variants={staggerItem}>לעסק</motion.span>
+            <motion.span className="block text-accent" variants={staggerItem}>מנצח</motion.span>
+          </h1>
 
-          {/* ── Text — centered or right-aligned in RTL ── */}
-          <motion.div
-            className="mx-auto max-w-2xl text-right"
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
+          <motion.p
+            className="mt-5 text-base font-medium text-white/85 sm:text-lg"
+            variants={staggerItem}
           >
-            <h1 className="text-[clamp(4rem,10vw,7.5rem)] font-black leading-none tracking-tighter text-white">
-              <motion.span className="block" variants={staggerItem}>זינוק</motion.span>
-              <motion.span className="block" variants={staggerItem}>לעסק</motion.span>
-              <motion.span className="block text-accent" variants={staggerItem}>מנצח</motion.span>
-            </h1>
+            מיתוג ופרסום&nbsp;&bull;&nbsp;הפקות אירועים&nbsp;&bull;&nbsp;מדיה דיגיטל
+          </motion.p>
 
-            <motion.p
-              className="mt-6 text-lg font-medium text-white/80 sm:text-xl"
-              variants={staggerItem}
-            >
-              מיתוג ופרסום&nbsp;&bull;&nbsp;הפקות אירועים&nbsp;&bull;&nbsp;מדיה דיגיטל
-            </motion.p>
+          <motion.div
+            className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-start"
+            variants={staggerItem}
+          >
+            <motion.div {...tapScale} className="sm:order-2">
+              <Link
+                href="/contact"
+                className="inline-flex w-full items-center justify-center rounded-full bg-accent px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-accent/30 transition-colors hover:bg-accent-hover sm:w-auto"
+              >
+                להצעת מחיר &#171;&#171;
+              </Link>
+            </motion.div>
 
-            <motion.div
-              className="mt-10 flex flex-wrap items-center justify-end gap-4"
-              variants={staggerItem}
-            >
-              <motion.div {...tapScale}>
-                <Link
-                  href="/gallery"
-                  className="rounded-full border border-white/30 px-7 py-3.5 text-base font-medium text-white transition-colors hover:border-accent hover:text-accent"
-                >
-                  לגלריה
-                </Link>
-              </motion.div>
-
-              <motion.div {...tapScale}>
-                <Link
-                  href="/contact"
-                  className="rounded-full bg-accent px-7 py-3.5 text-base font-bold text-white shadow-lg shadow-accent/30 transition-colors hover:bg-accent-hover"
-                >
-                  להצעת מחיר &#171;&#171;
-                </Link>
-              </motion.div>
+            <motion.div {...tapScale} className="sm:order-1">
+              <Link
+                href="/gallery"
+                className="inline-flex w-full items-center justify-center rounded-full border border-white/30 px-7 py-3.5 text-base font-medium text-white transition-colors hover:border-accent hover:text-accent sm:w-auto"
+              >
+                לגלריה
+              </Link>
             </motion.div>
           </motion.div>
-
-        </div>
+        </motion.div>
       </Container>
     </section>
   );
