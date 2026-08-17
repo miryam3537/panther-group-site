@@ -10,7 +10,7 @@ import {
 } from "@/lib/animations";
 
 const BG_IMAGE =
-  "https://gwyeuaywrngqnkpfdecc.supabase.co/storage/v1/object/public/HOMEPAJE/panterhome.jpg";
+  "https://gwyeuaywrngqnkpfdecc.supabase.co/storage/v1/object/public/HOMEPAJE/HOME12.jpg";
 
 export function Hero() {
   return (
