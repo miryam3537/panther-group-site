@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Container } from "@/components/layout/Container";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
-import { serviceSubcategories } from "@/lib/site";
+import { serviceSubcategories, type Subcategory } from "@/lib/site";
 
 export const metadata: Metadata = { title: "שירותים" };
 
@@ -127,17 +127,18 @@ export default async function ServicesPage() {
                     {/* תת-מחלקות */}
                     {(serviceSubcategories[service.slug] ?? []).length > 0 && (
                       <div className="mt-4 flex flex-wrap gap-2">
-                        {serviceSubcategories[service.slug].map((sub) => (
-                          <span
-                            key={sub}
-                            className={`rounded-full border px-3 py-1 text-xs font-semibold ${
+                        {(serviceSubcategories[service.slug] as Subcategory[]).map((sub) => (
+                          <Link
+                            key={sub.slug}
+                            href={`/gallery/${service.slug}/${sub.slug}`}
+                            className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors hover:bg-accent hover:border-accent hover:text-white ${
                               isDark
                                 ? "border-accent/30 bg-accent/10 text-accent/80"
                                 : "border-accent/40 bg-accent/10 text-accent"
                             }`}
                           >
-                            {sub}
-                          </span>
+                            {sub.title}
+                          </Link>
                         ))}
                       </div>
                     )}

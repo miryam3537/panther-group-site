@@ -31,25 +31,36 @@ export const services = [
 
 export type Service = (typeof services)[number];
 
-export const serviceSubcategories: Record<string, string[]> = {
-  branding:     ["מיתוג לעסקים", "מיתוג למוסדות"],
-  promotions:   ["מתנות"],
-  events:       [],
-  print:        ["ניירת", "ספרים וחוברות", "משי", "סובלימציה", "רקמה"],
-  digital:      ["דפי נחיתה", "אתרים", "באנרים מונפשים"],
-  signage:      ["עסקים", "מוסדות", "בתי כנסת"],
-  distribution: ["הפצה תיבות דואר", "הפצת תלי דלת"],
-  posters:      ["לוחות פרסום בבית כנסת", "לוחות בבניינים", "לוחות במרחב העירוני"],
-};
+export type Subcategory = { slug: string; title: string };
 
-/** תת-מחלקות לכל מחלקה */
-export const serviceSubcategories: Record<string, string[]> = {
-  branding:     ["מיתוג לעסקים", "מיתוג למוסדות"],
-  promotions:   ["מתנות"],
+export const serviceSubcategories: Record<string, Subcategory[]> = {
+  branding:     [{ slug: "branding-business", title: "מיתוג לעסקים" }, { slug: "branding-institutions", title: "מיתוג למוסדות" }],
+  promotions:   [{ slug: "gifts", title: "מתנות" }],
   events:       [],
-  print:        ["ניירת", "ספרים וחוברות", "משי", "סובלימציה", "רקמה"],
-  digital:      ["דפי נחיתה", "אתרים", "באנרים מונפשים"],
-  signage:      ["עסקים", "מוסדות", "בתי כנסת"],
-  distribution: ["הפצה תיבות דואר", "הפצת תלי דלת"],
-  posters:      ["לוחות פרסום בבית כנסת", "לוחות בבניינים", "לוחות במרחב העירוני"],
+  print:        [
+    { slug: "stationery",  title: "ניירת" },
+    { slug: "books",       title: "ספרים וחוברות" },
+    { slug: "silk",        title: "משי" },
+    { slug: "sublimation", title: "סובלימציה" },
+    { slug: "embroidery",  title: "רקמה" },
+  ],
+  digital:      [
+    { slug: "landing-pages",    title: "דפי נחיתה" },
+    { slug: "websites",         title: "אתרים" },
+    { slug: "animated-banners", title: "באנרים מונפשים" },
+  ],
+  signage:      [
+    { slug: "signage-business",     title: "עסקים" },
+    { slug: "signage-institutions", title: "מוסדות" },
+    { slug: "synagogues",           title: "בתי כנסת" },
+  ],
+  distribution: [
+    { slug: "mailbox",      title: "הפצה תיבות דואר" },
+    { slug: "door-hangers", title: "הפצת תלי דלת" },
+  ],
+  posters:      [
+    { slug: "synagogue-boards", title: "לוחות פרסום בבית כנסת" },
+    { slug: "building-boards",  title: "לוחות בבניינים" },
+    { slug: "urban-boards",     title: "לוחות במרחב העירוני" },
+  ],
 };

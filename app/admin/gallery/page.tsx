@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
+import { serviceSubcategories } from "@/lib/site";
 
 type GalleryImage = {
   id: string;
@@ -29,6 +30,7 @@ const CATEGORIES = [
 export default function AdminGalleryPage() {
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState(CATEGORIES[0].slug);
+  const [activeSubcategory, setActiveSubcategory] = useState<string>("");
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -38,6 +40,8 @@ export default function AdminGalleryPage() {
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const currentSubcats = serviceSubcategories[activeCategory] ?? [];
+
   // Auth check
   useEffect(() => {
     const supabase = createClient();
@@ -46,23 +50,31 @@ export default function AdminGalleryPage() {
     });
   }, [router]);
 
-  // Fetch images for active category
+  // Fetch images for active category + subcategory
   const fetchImages = useCallback(async () => {
     setLoading(true);
     setError(null);
     const supabase = createClient();
-    const { data, error } = await supabase
+    let query = supabase
       .from("gallery_images")
       .select("*")
       .eq("category", activeCategory)
       .order("display_order", { ascending: true });
+
+    if (activeSubcategory) {
+      query = query.eq("subcategory", activeSubcategory);
+    } else {
+      query = query.is("subcategory", null);
+    }
+
+    const { data, error } = await query;
     if (error) {
       setError(error.message);
     } else {
       setImages(data ?? []);
     }
     setLoading(false);
-  }, [activeCategory]);
+  }, [activeCategory, activeSubcategory]);
 
   useEffect(() => {
     fetchImages();
@@ -87,7 +99,8 @@ export default function AdminGalleryPage() {
 
     for (const file of fileArray) {
       const ext = file.name.split(".").pop();
-      const path = `${activeCategory}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const subFolder = activeSubcategory ? `${activeSubcategory}/` : "";
+      const path = `${activeCategory}/${subFolder}${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
       // Step 1: upload to storage
       const storageResult = await supabase.storage
@@ -112,6 +125,7 @@ export default function AdminGalleryPage() {
       // Step 3: insert into DB
       const dbResult = await supabase.from("gallery_images").insert({
         category: activeCategory,
+        subcategory: activeSubcategory || null,
         storage_path: path,
         url: urlData.publicUrl,
         display_order: images.length + uploaded + 1,
@@ -211,11 +225,11 @@ export default function AdminGalleryPage() {
         )}
 
         {/* ── Category tabs ── */}
-        <div className="mb-8 flex flex-wrap gap-2">
+        <div className="mb-4 flex flex-wrap gap-2">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.slug}
-              onClick={() => setActiveCategory(cat.slug)}
+              onClick={() => { setActiveCategory(cat.slug); setActiveSubcategory(""); }}
               className={`rounded-full px-4 py-2 text-xs font-semibold transition-all ${
                 activeCategory === cat.slug
                   ? "bg-accent text-white shadow-lg shadow-accent/20"
@@ -226,6 +240,35 @@ export default function AdminGalleryPage() {
             </button>
           ))}
         </div>
+
+        {/* ── Subcategory tabs ── */}
+        {currentSubcats.length > 0 && (
+          <div className="mb-8 flex flex-wrap gap-2">
+            <button
+              onClick={() => setActiveSubcategory("")}
+              className={`rounded-full px-4 py-2 text-xs font-semibold transition-all ${
+                activeSubcategory === ""
+                  ? "bg-white/20 text-white"
+                  : "border border-white/10 text-white/40 hover:border-white/30 hover:text-white"
+              }`}
+            >
+              ללא תת-מחלקה
+            </button>
+            {currentSubcats.map((sub) => (
+              <button
+                key={sub.slug}
+                onClick={() => setActiveSubcategory(sub.slug)}
+                className={`rounded-full px-4 py-2 text-xs font-semibold transition-all ${
+                  activeSubcategory === sub.slug
+                    ? "bg-accent text-white shadow-lg shadow-accent/20"
+                    : "border border-white/10 text-white/50 hover:border-accent/40 hover:text-accent"
+                }`}
+              >
+                {sub.title}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* ── Upload zone ── */}
         <div

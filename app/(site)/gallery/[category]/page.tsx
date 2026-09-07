@@ -5,6 +5,7 @@ import { Container } from "@/components/layout/Container";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { CategoryGalleryGrid } from "@/components/ui/CategoryGalleryGrid";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
+import { serviceSubcategories } from "@/lib/site";
 
 const categoryNames: Record<string, string> = {
   branding:     "מיתוג ופרסום",
@@ -40,13 +41,28 @@ export default async function GalleryCategoryPage({
 
   const [{ data: serviceData }, { data: images }] = await Promise.all([
     supabase.from("services").select("image_url, description").eq("slug", category).single(),
-    supabase.from("gallery_images").select("id, url").eq("category", category).order("display_order", { ascending: true }),
+    supabase.from("gallery_images").select("id, url").eq("category", category).is("subcategory", null).order("display_order", { ascending: true }),
   ]);
 
   const heroImageUrl = serviceData?.image_url ?? null;
   const description = serviceData?.description ?? null;
   const imgs = images ?? [];
   const isBranding = category === "branding";
+  const subcats = serviceSubcategories[category] ?? [];
+
+  // Fetch cover image + count per subcategory
+  const subcatData = await Promise.all(
+    subcats.map(async (sub) => {
+      const { data, count } = await supabase
+        .from("gallery_images")
+        .select("url", { count: "exact" })
+        .eq("category", category)
+        .eq("subcategory", sub.slug)
+        .order("display_order", { ascending: true })
+        .limit(1);
+      return { ...sub, coverUrl: data?.[0]?.url ?? null, count: count ?? 0 };
+    })
+  );
 
   return (
     <>
@@ -166,12 +182,44 @@ export default async function GalleryCategoryPage({
       {/* ── Gallery grid ── */}
       <section id="gallery" className="bg-[#080808] pb-24 pt-10">
         <Container>
+
+          {/* ── Subcategory cards (if exist) ── */}
+          {subcats.length > 0 && (
+            <div className="mb-14">
+              <div className="mb-6 flex items-center gap-3" dir="rtl">
+                <div className="h-[2px] w-8 rounded-full bg-accent" />
+                <h2 className="text-sm font-bold uppercase tracking-widest text-white/40">תת-מחלקות</h2>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {subcatData.map((sub) => (
+                  <Link
+                    key={sub.slug}
+                    href={`/gallery/${category}/${sub.slug}`}
+                    className="group relative aspect-video overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-accent/60"
+                  >
+                    {sub.coverUrl ? (
+                      <Image src={sub.coverUrl} alt={sub.title} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                    ) : (
+                      <div className="absolute inset-0 bg-gradient-to-br from-card via-border/30 to-black" />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-accent/0 transition-all group-hover:bg-accent/10" />
+                    <div className="absolute inset-x-0 bottom-0 p-4">
+                      <h3 className="text-lg font-bold text-white transition-colors group-hover:text-accent">{sub.title}</h3>
+                      <p className="mt-0.5 text-xs text-white/50">{sub.count > 0 ? `${sub.count} תמונות` : "בקרוב"}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Section header */}
           <div className="mb-8 flex items-center justify-between" dir="rtl">
             <div className="flex items-center gap-3">
               <div className="h-[2px] w-8 rounded-full bg-accent" />
               <h2 className="text-sm font-bold uppercase tracking-widest text-white/40">
-                עבודות נבחרות
+                {subcats.length > 0 ? "עבודות ללא תת-מחלקה" : "עבודות נבחרות"}
               </h2>
             </div>
             {imgs.length > 0 && (
@@ -181,7 +229,7 @@ export default async function GalleryCategoryPage({
             )}
           </div>
 
-          {imgs.length === 0 ? (
+          {imgs.length === 0 && subcats.length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-white/8 bg-white/[0.02] py-28 text-center">
               <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/5">
                 <svg className="h-6 w-6 text-white/20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
@@ -190,9 +238,9 @@ export default async function GalleryCategoryPage({
               </div>
               <p className="text-sm text-white/25">אין תמונות בקטגוריה זו עדיין</p>
             </div>
-          ) : (
+          ) : imgs.length > 0 ? (
             <CategoryGalleryGrid images={imgs} isBranding={isBranding} />
-          )}
+          ) : null}
 
           {/* CTA strip */}
           <div className="mt-16 flex flex-col items-center gap-4 rounded-2xl border border-white/6 bg-white/[0.02] px-8 py-10 text-center">
