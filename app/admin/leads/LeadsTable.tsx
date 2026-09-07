@@ -64,12 +64,141 @@ function stripServiceLine(message: string | null): string | null {
   return message.replace(/^שירות:\s*\S+\n?/, "").trim() || null;
 }
 
+// ─── Email Modal ───────────────────────────────────────────────────────────────
+function EmailModal({
+  lead,
+  onClose,
+}: {
+  lead: Lead;
+  onClose: () => void;
+}) {
+  const [subject, setSubject] = useState("בקשר לפנייתך ל-PANTER");
+  const [body, setBody] = useState(
+    `שלום ${lead.name},\n\nתודה שפנית אלינו!\n\nנשמח לעמוד לרשותך.\n\nבברכה,\nצוות PANTER`
+  );
+  const [sending, setSending] = useState(false);
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+
+  async function handleSend() {
+    setSending(true);
+    setStatus("idle");
+    try {
+      const res = await fetch("/api/admin/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ to: lead.email, subject, body }),
+      });
+      if (res.ok) {
+        setStatus("success");
+        setTimeout(onClose, 1500);
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div className="w-full max-w-lg rounded-2xl border border-white/10 bg-[#0e0e0e] p-6 shadow-2xl text-right">
+        <div className="mb-5 flex items-center justify-between">
+          <button
+            onClick={onClose}
+            className="text-white/30 hover:text-white transition-colors text-lg leading-none"
+          >
+            ✕
+          </button>
+          <h2 className="text-base font-semibold text-white">
+            שלח מייל לـ{lead.name}
+          </h2>
+        </div>
+
+        {/* To */}
+        <div className="mb-4">
+          <label className="mb-1 block text-xs text-white/40">אל</label>
+          <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white/50" dir="ltr">
+            {lead.email}
+          </div>
+        </div>
+
+        {/* Subject */}
+        <div className="mb-4">
+          <label className="mb-1 block text-xs text-white/40">נושא</label>
+          <input
+            value={subject}
+            onChange={(e) => setSubject(e.target.value)}
+            className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none transition-colors focus:border-accent/40 focus:bg-white/8"
+            placeholder="נושא המייל"
+          />
+        </div>
+
+        {/* Body */}
+        <div className="mb-5">
+          <label className="mb-1 block text-xs text-white/40">תוכן</label>
+          <textarea
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            rows={7}
+            className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition-colors focus:border-accent/40 focus:bg-white/8"
+            placeholder="תוכן המייל..."
+          />
+        </div>
+
+        {/* Status */}
+        {status === "success" && (
+          <p className="mb-3 text-center text-sm text-emerald-400">✓ המייל נשלח בהצלחה!</p>
+        )}
+        {status === "error" && (
+          <p className="mb-3 text-center text-sm text-red-400">שליחה נכשלה. בדוק את מפתח ה-API.</p>
+        )}
+
+        {/* Actions */}
+        <div className="flex gap-3 justify-start flex-row-reverse">
+          <button
+            onClick={handleSend}
+            disabled={sending || !subject || !body}
+            className="flex items-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-accent/80 active:scale-95 disabled:opacity-40 disabled:pointer-events-none"
+          >
+            {sending ? (
+              <>
+                <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                שולח...
+              </>
+            ) : (
+              <>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-3.5 w-3.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                </svg>
+                שלח מייל
+              </>
+            )}
+          </button>
+          <button
+            onClick={onClose}
+            className="rounded-xl border border-white/10 px-5 py-2.5 text-sm text-white/50 transition-all hover:border-white/30 hover:text-white"
+          >
+            ביטול
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Table ────────────────────────────────────────────────────────────────
 export function LeadsTable({ initialLeads }: { initialLeads: Lead[] }) {
   const [leads, setLeads] = useState<Lead[]>(initialLeads);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [serviceFilter, setServiceFilter] = useState<ServiceFilter>("all");
   const [toggling, setToggling] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [emailLead, setEmailLead] = useState<Lead | null>(null);
 
   const filtered = leads.filter((l) => {
     const statusOk =
@@ -123,6 +252,11 @@ export function LeadsTable({ initialLeads }: { initialLeads: Lead[] }) {
 
   return (
     <div>
+      {/* Email Modal */}
+      {emailLead && (
+        <EmailModal lead={emailLead} onClose={() => setEmailLead(null)} />
+      )}
+
       {/* Row 1 — Status filter */}
       <div className="mb-3 flex flex-wrap gap-2">
         <span className="self-center text-xs text-white/30 ml-1">סטטוס:</span>
@@ -274,15 +408,33 @@ export function LeadsTable({ initialLeads }: { initialLeads: Lead[] }) {
                       </button>
                     </td>
                     <td className="px-5 py-4">
-                      <button
-                        type="button"
-                        onClick={() => deleteLead(lead)}
-                        disabled={deleting === lead.id}
-                        className="rounded-full border border-red-500/30 px-3 py-1.5 text-xs font-semibold text-red-400 transition-all hover:bg-red-500/15 active:scale-95 disabled:opacity-50"
-                        title="מחק פנייה"
-                      >
-                        {deleting === lead.id ? "..." : "מחק"}
-                      </button>
+                      <div className="flex items-center gap-2">
+                        {/* Email button */}
+                        {lead.email ? (
+                          <button
+                            type="button"
+                            onClick={() => setEmailLead(lead)}
+                            className="rounded-full border border-blue-500/30 px-3 py-1.5 text-xs font-semibold text-blue-400 transition-all hover:bg-blue-500/15 active:scale-95 whitespace-nowrap"
+                            title={`שלח מייל ל-${lead.email}`}
+                          >
+                            ✉ מייל
+                          </button>
+                        ) : (
+                          <span className="text-xs text-white/20 px-1">
+                            אין מייל
+                          </span>
+                        )}
+                        {/* Delete button */}
+                        <button
+                          type="button"
+                          onClick={() => deleteLead(lead)}
+                          disabled={deleting === lead.id}
+                          className="rounded-full border border-red-500/30 px-3 py-1.5 text-xs font-semibold text-red-400 transition-all hover:bg-red-500/15 active:scale-95 disabled:opacity-50"
+                          title="מחק פנייה"
+                        >
+                          {deleting === lead.id ? "..." : "מחק"}
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
