@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Container } from "@/components/layout/Container";
 import { services } from "@/lib/site";
+import { useToast } from "@/components/ui/Toast";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -41,6 +42,16 @@ function Confetti() {
 export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  async function copyToClipboard(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast("הועתק ללוח!", "success");
+    } catch {
+      toast("ההעתקה נכשלה", "error");
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -91,13 +102,39 @@ export function ContactForm() {
               להצעת מחיר מושלמת עבורכם!
             </p>
 
-            <div className="mt-8 flex flex-col gap-2 text-sm text-white/70">
-              <a href="tel:0527180241" className="transition-colors hover:text-white">
-                📞 052-718-0241
-              </a>
-              <a href="mailto:panther4183774@gmail.com" className="transition-colors hover:text-white">
-                ✉ panther4183774@gmail.com
-              </a>
+            <div className="mt-8 flex flex-col gap-3 text-sm text-white/70">
+              <div className="flex items-center gap-2">
+                <a href="tel:0527180241" className="transition-colors hover:text-white">
+                  📞 052-718-0241
+                </a>
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard("0527180241")}
+                  aria-label="העתק מספר טלפון"
+                  className="rounded p-1 text-white/40 transition-colors hover:text-white"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                </button>
+              </div>
+              <div className="flex items-center gap-2">
+                <a href="mailto:panther4183774@gmail.com" className="transition-colors hover:text-white">
+                  ✉ panther4183774@gmail.com
+                </a>
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard("panther4183774@gmail.com")}
+                  aria-label="העתק כתובת אימייל"
+                  className="rounded p-1 text-white/40 transition-colors hover:text-white"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
 
