@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req: NextRequest) {
   // Verify admin is logged in
   const supabase = await createServerSupabaseClient();
@@ -21,6 +19,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "חסרים שדות" }, { status: 400 });
   }
 
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    return NextResponse.json({ error: "שירות המייל אינו מוגדר" }, { status: 503 });
+  }
+
+  const resend = new Resend(apiKey);
   const fromEmail = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
   const fromName = process.env.RESEND_FROM_NAME ?? "PANTER";
 
