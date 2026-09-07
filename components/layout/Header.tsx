@@ -1,37 +1,54 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Container } from "@/components/layout/Container";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { navItems, siteConfig } from "@/lib/site";
 
-function PantherLogo() {
-  return (
-    <Link href="/" aria-label={`${siteConfig.name} — דף הבית`}>
-      <Image
-        src="https://gwyeuaywrngqnkpfdecc.supabase.co/storage/v1/object/public/HOMEPAJE/LOGO5.png"
-        alt={siteConfig.name}
-        width={280}
-        height={168}
-        className="h-20 w-auto object-contain lg:h-24"
-        priority
-      />
-    </Link>
-  );
-}
-
 export function Header() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 30);
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/90 backdrop-blur-md">
+    <header
+      className={[
+        "sticky top-0 z-50 border-b transition-all duration-300",
+        scrolled
+          ? "border-border/80 bg-background/95 shadow-[0_4px_24px_rgba(0,0,0,0.5)] backdrop-blur-lg"
+          : "border-border/50 bg-background/90 backdrop-blur-md",
+      ].join(" ")}
+    >
       <Container>
-        {/*
-          RTL flex layout:
-          first child → RIGHT (Logo)
-          middle child → CENTER (Nav)
-          last child → LEFT (CTA + MobileNav)
-        */}
-        <div className="flex h-20 items-center justify-between lg:h-24">
+        <div
+          className={[
+            "flex items-center justify-between transition-all duration-300",
+            scrolled ? "h-14 lg:h-16" : "h-20 lg:h-24",
+          ].join(" ")}
+        >
           {/* Logo — RIGHT in RTL */}
-          <PantherLogo />
+          <Link href="/" aria-label={`${siteConfig.name} — דף הבית`}>
+            <Image
+              src="https://gwyeuaywrngqnkpfdecc.supabase.co/storage/v1/object/public/HOMEPAJE/LOGO5.png"
+              alt={siteConfig.name}
+              width={280}
+              height={168}
+              className={[
+                "w-auto object-contain transition-all duration-300",
+                scrolled ? "h-12 lg:h-14" : "h-20 lg:h-24",
+              ].join(" ")}
+              priority
+            />
+          </Link>
 
           {/* Nav — CENTER (desktop only) */}
           <nav className="hidden lg:block" aria-label="ניווט ראשי">

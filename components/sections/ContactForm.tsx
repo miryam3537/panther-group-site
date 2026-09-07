@@ -6,6 +6,38 @@ import { services } from "@/lib/site";
 
 type Status = "idle" | "loading" | "success" | "error";
 
+// ── Confetti pieces (pure CSS, no library) ────────────────────
+const CONFETTI_COLORS = ["#f97316", "#fbbf24", "#ef4444", "#3b82f6", "#22c55e", "#ec4899", "#a855f7"];
+const CONFETTI_PIECES = Array.from({ length: 28 }, (_, i) => ({
+  id: i,
+  color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+  left: `${3 + (i * 3.4) % 94}%`,
+  delay: `${(i * 0.045) % 0.9}s`,
+  size: `${6 + (i % 5) * 2}px`,
+  isCircle: i % 3 === 0,
+}));
+
+function Confetti() {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl" aria-hidden="true">
+      {CONFETTI_PIECES.map((p) => (
+        <div
+          key={p.id}
+          className="confetti-piece absolute top-4"
+          style={{
+            left: p.left,
+            width: p.size,
+            height: p.size,
+            backgroundColor: p.color,
+            borderRadius: p.isCircle ? "50%" : "2px",
+            animationDelay: p.delay,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -72,19 +104,34 @@ export function ContactForm() {
           {/* ── LEFT: Form ── */}
           <div>
             {status === "success" ? (
-              <div className="flex flex-col items-center justify-center rounded-2xl bg-white/15 px-8 py-14 text-center">
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/20">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" className="h-8 w-8" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              <div className="relative flex flex-col items-center justify-center overflow-hidden rounded-2xl bg-white/15 px-8 py-14 text-center">
+                {/* Confetti rain */}
+                <Confetti />
+
+                {/* Animated checkmark */}
+                <div className="relative mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-white/25 ring-4 ring-white/20 animate-[scale-in_0.4s_cubic-bezier(0.34,1.56,0.64,1)_both]">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="white"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-10 w-10"
+                    aria-hidden="true"
+                    style={{ animation: "stroke-in 0.5s ease 0.2s both" }}
+                  >
+                    <path d="M4.5 12.75l6 6 9-13.5" />
                   </svg>
                 </div>
-                <p className="text-xl font-black text-white">ההודעה נשלחה!</p>
-                <p className="mt-2 text-sm text-white/70">
-                  נחזור אליך בהקדם האפשרי.
+
+                <p className="text-2xl font-black text-white">🎉 ההודעה נשלחה!</p>
+                <p className="mt-2 text-base text-white/75">
+                  קיבלנו את זה — נחזור אליך בהקדם!
                 </p>
                 <button
                   onClick={() => setStatus("idle")}
-                  className="mt-6 rounded-xl border border-white/30 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10"
+                  className="mt-7 rounded-xl border border-white/30 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10"
                 >
                   שלח הודעה נוספת
                 </button>

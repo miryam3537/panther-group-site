@@ -210,6 +210,10 @@ export default async function GalleryCategoryPage({
                       <>
                         <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 via-zinc-900 to-black" />
                         <div className="absolute inset-0 bg-gradient-to-tr from-accent/10 via-transparent to-transparent" />
+                        {/* Shimmer sweep */}
+                        <div className="absolute inset-0 overflow-hidden">
+                          <div className="shimmer-slide absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-white/[0.07] to-transparent" />
+                        </div>
                         <div className="absolute inset-0 flex items-center justify-center">
                           <span className="text-[5rem] font-black text-white/[0.06] select-none leading-none">
                             {sub.title.charAt(0)}

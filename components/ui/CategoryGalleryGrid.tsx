@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 type GalleryImg = { id: string; url: string };
@@ -18,10 +18,12 @@ function Lightbox({
   onPrev: () => void;
   onNext: () => void;
 }) {
+  const touchStartX = useRef<number | null>(null);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
-      if (e.key === "ArrowRight") onPrev(); // RTL: right = previous visually for Hebrew
+      if (e.key === "ArrowRight") onPrev();
       if (e.key === "ArrowLeft") onNext();
     };
     document.body.style.overflow = "hidden";
@@ -32,17 +34,30 @@ function Lightbox({
     };
   }, [onClose, onPrev, onNext]);
 
+  function handleTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX;
+  }
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (touchStartX.current === null) return;
+    const delta = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(delta) > 50) delta > 0 ? onNext() : onPrev();
+    touchStartX.current = null;
+  }
+
   const img = images[index];
   if (!img) return null;
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/92 p-4 backdrop-blur-sm"
       onClick={onClose}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
       role="dialog"
       aria-modal="true"
       aria-label="תצוגה מוגדלת של תמונה"
     >
+      {/* Close */}
       <button
         type="button"
         onClick={onClose}
@@ -52,29 +67,34 @@ function Lightbox({
         ✕
       </button>
 
+      {/* Counter — top center */}
+      <div className="absolute top-5 left-1/2 -translate-x-1/2 z-10 rounded-full border border-white/15 bg-black/50 px-4 py-1.5 backdrop-blur-sm">
+        <span className="text-xs font-semibold tabular-nums text-white/60">
+          {index + 1} / {images.length}
+        </span>
+      </div>
+
       {images.length > 1 && (
         <>
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onNext();
-            }}
-            className="absolute right-4 z-10 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 text-2xl text-white transition-colors hover:border-accent hover:text-accent sm:right-8"
+            onClick={(e) => { e.stopPropagation(); onNext(); }}
+            className="absolute right-4 z-10 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition-all hover:border-accent hover:text-accent hover:scale-110 sm:right-8"
             aria-label="תמונה הבאה"
           >
-            ‹
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
           </button>
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onPrev();
-            }}
-            className="absolute left-4 z-10 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 text-2xl text-white transition-colors hover:border-accent hover:text-accent sm:left-8"
+            onClick={(e) => { e.stopPropagation(); onPrev(); }}
+            className="absolute left-4 z-10 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition-all hover:border-accent hover:text-accent hover:scale-110 sm:left-8"
             aria-label="תמונה קודמת"
           >
-            ›
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
           </button>
         </>
       )}
@@ -87,11 +107,14 @@ function Lightbox({
         <img
           src={img.url}
           alt=""
-          className="mx-auto max-h-[88vh] w-auto max-w-full rounded-lg object-contain shadow-2xl"
+          className="mx-auto max-h-[88vh] w-auto max-w-full rounded-xl object-contain shadow-2xl"
         />
-        <p className="mt-3 text-center text-xs text-white/40">
-          {index + 1} / {images.length}
-        </p>
+        {/* Swipe hint — mobile only */}
+        {images.length > 1 && (
+          <p className="mt-3 text-center text-[10px] font-medium uppercase tracking-widest text-white/25 sm:hidden">
+            ← החלק לתמונה הבאה →
+          </p>
+        )}
       </div>
     </div>
   );
