@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { CategoryGalleryGrid } from "@/components/ui/CategoryGalleryGrid";
+import { Card3D } from "@/components/ui/Card3D";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { serviceSubcategories } from "@/lib/site";
 
@@ -192,10 +193,10 @@ export default async function GalleryCategoryPage({
               </div>
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {subcatData.map((sub, idx) => (
+                  <Card3D key={sub.slug}>
                   <Link
-                    key={sub.slug}
                     href={`/gallery/${category}/${sub.slug}`}
-                    className="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/8 bg-zinc-900 transition-all duration-300 hover:border-accent/50 hover:shadow-[0_0_30px_rgba(0,0,0,0.6)]"
+                    className="group relative block aspect-[4/3] overflow-hidden rounded-2xl border border-white/8 bg-zinc-900 transition-[border-color] duration-300 hover:border-accent/50"
                   >
                     {/* Background image or styled empty state */}
                     {sub.coverUrl ? (
@@ -253,6 +254,7 @@ export default async function GalleryCategoryPage({
                     {/* Bottom accent line */}
                     <div className="absolute inset-x-0 bottom-0 h-[2px] scale-x-0 rounded-full bg-accent transition-transform duration-300 group-hover:scale-x-100" />
                   </Link>
+                  </Card3D>
                 ))}
               </div>
             </div>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { CategoryGalleryGrid } from "@/components/ui/CategoryGalleryGrid";
+import { ViewCounter } from "@/components/ui/ViewCounter";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { serviceSubcategories } from "@/lib/site";
 
@@ -111,11 +112,14 @@ export default async function SubcategoryGalleryPage({
               <div className="h-[2px] w-8 rounded-full bg-accent" />
               <h2 className="text-sm font-bold uppercase tracking-widest text-white/40">עבודות נבחרות</h2>
             </div>
-            {imgs.length > 0 && (
-              <span className="rounded-full border border-white/10 px-3 py-1 text-xs font-semibold text-white/30">
-                {imgs.length} פרויקטים
-              </span>
-            )}
+            <div className="flex items-center gap-2">
+              {imgs.length > 0 && (
+                <span className="rounded-full border border-white/10 px-3 py-1 text-xs font-semibold text-white/30">
+                  {imgs.length} פרויקטים
+                </span>
+              )}
+              <ViewCounter id={`${category}-${subcategory}`} />
+            </div>
           </div>
 
           {imgs.length === 0 ? (
