@@ -7,12 +7,14 @@ import { CategoryGalleryGrid } from "@/components/ui/CategoryGalleryGrid";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 
 const categoryNames: Record<string, string> = {
-  branding: "מיתוג ופרסום",
-  promotions: 'הפקות וקד"מ',
-  events: "הפקות אירועים",
-  signage: "שילוט למוסדות",
-  digital: "מדיה ודיגיטל",
-  boards: "לוחות פרסום",
+  branding:     "מיתוג ופרסום",
+  promotions:   'הפקות וקד"מ',
+  events:       "הפקות אירועים",
+  print:        "דפוס",
+  digital:      "מדיה ודיגיטל",
+  signage:      "שילוט",
+  distribution: "הפצה",
+  posters:      "הדבקת מודעות",
 };
 
 export const dynamic = "force-dynamic";

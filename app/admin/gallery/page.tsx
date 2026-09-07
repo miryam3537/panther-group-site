@@ -16,12 +16,14 @@ type GalleryImage = {
 };
 
 const CATEGORIES = [
-  { slug: "branding", label: "מיתוג ופרסום" },
-  { slug: "promotions", label: 'הפקות וקד"מ' },
-  { slug: "events", label: "הפקות אירועים" },
-  { slug: "signage", label: "שילוט למוסדות" },
-  { slug: "digital", label: "מדיה ודיגיטל" },
-  { slug: "boards", label: "לוחות פרסום" },
+  { slug: "branding",     label: "מיתוג ופרסום" },
+  { slug: "promotions",   label: 'הפקות וקד"מ' },
+  { slug: "events",       label: "הפקות אירועים" },
+  { slug: "print",        label: "דפוס" },
+  { slug: "digital",      label: "מדיה ודיגיטל" },
+  { slug: "signage",      label: "שילוט" },
+  { slug: "distribution", label: "הפצה" },
+  { slug: "posters",      label: "הדבקת מודעות" },
 ];
 
 export default function AdminGalleryPage() {

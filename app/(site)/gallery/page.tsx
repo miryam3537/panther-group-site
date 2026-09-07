@@ -10,12 +10,14 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "גלריה" };
 
 const CATEGORIES = [
-  { slug: "branding", title: "מיתוג ופרסום" },
-  { slug: "promotions", title: 'הפקות וקד"מ' },
-  { slug: "events", title: "הפקות אירועים" },
-  { slug: "signage", title: "שילוט למוסדות" },
-  { slug: "digital", title: "מדיה ודיגיטל" },
-  { slug: "boards", title: "לוחות פרסום" },
+  { slug: "branding",     title: "מיתוג ופרסום" },
+  { slug: "promotions",   title: 'הפקות וקד"מ' },
+  { slug: "events",       title: "הפקות אירועים" },
+  { slug: "print",        title: "דפוס" },
+  { slug: "digital",      title: "מדיה ודיגיטל" },
+  { slug: "signage",      title: "שילוט" },
+  { slug: "distribution", title: "הפצה" },
+  { slug: "posters",      title: "הדבקת מודעות" },
 ];
 
 export default async function GalleryPage() {

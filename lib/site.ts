@@ -19,12 +19,26 @@ export const navItems = [
 ] as const;
 
 export const services = [
-  { id: "branding", title: "מיתוג ופרסום", slug: "branding" },
-  { id: "promotions", title: 'הפקות וקד"מ', slug: "promotions" },
-  { id: "events", title: "הפקות אירועים", slug: "events" },
-  { id: "signage", title: "שילוט למוסדות", slug: "signage" },
-  { id: "digital", title: "מדיה ודיגיטל", slug: "digital" },
-  { id: "boards", title: "לוחות פרסום", slug: "boards" },
+  { id: "branding",     title: "מיתוג ופרסום",    slug: "branding" },
+  { id: "promotions",   title: 'הפקות וקד"מ',      slug: "promotions" },
+  { id: "events",       title: "הפקות אירועים",    slug: "events" },
+  { id: "print",        title: "דפוס",             slug: "print" },
+  { id: "digital",      title: "מדיה ודיגיטל",     slug: "digital" },
+  { id: "signage",      title: "שילוט",            slug: "signage" },
+  { id: "distribution", title: "הפצה",             slug: "distribution" },
+  { id: "posters",      title: "הדבקת מודעות",     slug: "posters" },
 ] as const;
 
 export type Service = (typeof services)[number];
+
+/** תת-מחלקות לכל מחלקה */
+export const serviceSubcategories: Record<string, string[]> = {
+  branding:     ["מיתוג לעסקים", "מיתוג למוסדות"],
+  promotions:   ["מתנות"],
+  events:       [],
+  print:        ["ניירת", "ספרים וחוברות", "משי", "סובלימציה", "רקמה"],
+  digital:      ["דפי נחיתה", "אתרים", "באנרים מונפשים"],
+  signage:      ["עסקים", "מוסדות", "בתי כנסת"],
+  distribution: ["הפצה תיבות דואר", "הפצת תלי דלת"],
+  posters:      ["לוחות פרסום בבית כנסת", "לוחות בבניינים", "לוחות במרחב העירוני"],
+};

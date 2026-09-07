@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Container } from "@/components/layout/Container";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
+import { serviceSubcategories } from "@/lib/site";
 
 export const metadata: Metadata = { title: "שירותים" };
 
@@ -26,12 +27,14 @@ export default async function ServicesPage() {
   // Fallback to static data if DB fails
   const servicesData: Service[] = error || !data?.length
     ? [
-        { id: "1", slug: "branding",   title: "מיתוג ופרסום",   description: "בניית זהות מותג חדה ומיצוב שמבדיל אתכם מהמתחרים.", image_url: null, sort_order: 1 },
-        { id: "2", slug: "promotions", title: 'הפקות וקד"מ',    description: 'הפקות קד"מ שיוצרות buzz — חוויות מותג בלתי נשכחות.', image_url: null, sort_order: 2 },
-        { id: "3", slug: "events",     title: "הפקות אירועים",  description: "מכנסים, ימי גיבוש, טקסים וכנסים — מהתחלה ועד הסוף.", image_url: null, sort_order: 3 },
-        { id: "4", slug: "signage",    title: "שילוט למוסדות",  description: "שילוט פנימי וחיצוני — עיצוב, ייצור והתקנה.", image_url: null, sort_order: 4 },
-        { id: "5", slug: "digital",    title: "מדיה ודיגיטל",   description: "ניהול רשתות חברתיות, קמפיינים ממומנים ושיווק תוכן.", image_url: null, sort_order: 5 },
-        { id: "6", slug: "boards",     title: "לוחות פרסום",    description: "עיצוב וייצור לוחות פרסום, שלטי חוצות ובאנרים.", image_url: null, sort_order: 6 },
+        { id: "1", slug: "branding",      title: "מיתוג ופרסום",    description: "בניית זהות מותג חדה ומיצוב שמבדיל אתכם מהמתחרים.", image_url: null, sort_order: 1 },
+        { id: "2", slug: "promotions",    title: 'הפקות וקד"מ',      description: 'הפקות קד"מ שיוצרות buzz — חוויות מותג בלתי נשכחות.', image_url: null, sort_order: 2 },
+        { id: "3", slug: "events",        title: "הפקות אירועים",    description: "מכנסים, ימי גיבוש, טקסים וכנסים — מהתחלה ועד הסוף.", image_url: null, sort_order: 3 },
+        { id: "4", slug: "print",         title: "דפוס",             description: "ניירת, ספרים וחוברות, משי, סובלימציה ורקמה — הכל תחת קורת גג אחת.", image_url: null, sort_order: 4 },
+        { id: "5", slug: "digital",       title: "מדיה ודיגיטל",     description: "דפי נחיתה, אתרים, באנרים מונפשים ושיווק דיגיטלי.", image_url: null, sort_order: 5 },
+        { id: "6", slug: "signage",       title: "שילוט",            description: "שילוט לעסקים, מוסדות ובתי כנסת — עיצוב, ייצור והתקנה.", image_url: null, sort_order: 6 },
+        { id: "7", slug: "distribution",  title: "הפצה",             description: "הפצה לתיבות דואר והפצת תלי דלת — מהירה ואמינה.", image_url: null, sort_order: 7 },
+        { id: "8", slug: "posters",       title: "הדבקת מודעות",     description: "לוחות פרסום בבית כנסת, בבניינים ובמרחב העירוני.", image_url: null, sort_order: 8 },
       ]
     : data;
 
@@ -121,6 +124,23 @@ export default async function ServicesPage() {
                     <p className={`mt-4 text-base leading-relaxed ${isDark ? "text-muted" : "text-gray-500"}`}>
                       {service.description}
                     </p>
+                    {/* תת-מחלקות */}
+                    {(serviceSubcategories[service.slug] ?? []).length > 0 && (
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {serviceSubcategories[service.slug].map((sub) => (
+                          <span
+                            key={sub}
+                            className={`rounded-full border px-3 py-1 text-xs font-semibold ${
+                              isDark
+                                ? "border-accent/30 bg-accent/10 text-accent/80"
+                                : "border-accent/40 bg-accent/10 text-accent"
+                            }`}
+                          >
+                            {sub}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                     <div className="my-6 h-px w-16 bg-accent/40" />
                     <div className="flex flex-wrap gap-3">
                       <Link
