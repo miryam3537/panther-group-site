@@ -69,8 +69,8 @@ export default async function GalleryCategoryPage({
     <>
       {/* ── Full-bleed Hero ── */}
       <section className="relative h-screen min-h-[600px] w-full overflow-hidden bg-zinc-950">
-        {/* Service image */}
-        {heroImageUrl && (
+        {/* Service image OR rich fallback background */}
+        {heroImageUrl ? (
           <Image
             src={heroImageUrl}
             alt={title}
@@ -79,13 +79,26 @@ export default async function GalleryCategoryPage({
             sizes="100vw"
             className="object-cover"
           />
+        ) : (
+          <>
+            {/* Dark gradient base */}
+            <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-[#0d0d0d] to-black" />
+            {/* Animated radial orange glow */}
+            <div className="absolute inset-0 animate-pulse bg-[radial-gradient(ellipse_80%_60%_at_50%_40%,rgba(249,115,22,0.08),transparent)]" />
+            {/* Large faint category initial */}
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center select-none">
+              <span className="text-[30vw] font-black leading-none text-white/[0.025]">
+                {title.charAt(0)}
+              </span>
+            </div>
+          </>
         )}
 
         {/* Gradient overlays — heavy bottom for readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/15" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
 
-        {/* Subtle dot grid */}
+        {/* Dot grid — always visible */}
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.04]"
           style={{
@@ -131,10 +144,11 @@ export default async function GalleryCategoryPage({
                 </div>
                 {/* Large title */}
                 <h1 className="mt-4 text-5xl font-black leading-none text-white drop-shadow-2xl sm:text-6xl lg:text-8xl xl:text-9xl">
-                  הגלריה
-                  <br />
-                  <span className="text-accent">שלנו</span>
+                  {title}
                 </h1>
+                <p className="mt-3 text-2xl font-black text-accent drop-shadow-2xl sm:text-3xl lg:text-4xl">
+                  הגלריה שלנו
+                </p>
                 {description && (
                   <p className="mt-5 max-w-md text-sm leading-relaxed text-white/45">
                     {description}
