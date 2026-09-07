@@ -7,7 +7,7 @@ import { ContactForm } from "@/components/sections/ContactForm";
 import { WhyPantherCards } from "@/components/sections/WhyPantherCards";
 import { LeapMeter } from "@/components/sections/LeapMeter";
 import { GalleryCycler } from "@/components/ui/GalleryCycler";
-import { LogoMarquee } from "@/components/ui/LogoMarquee";
+import { LogoMarqueeWrapper } from "@/components/ui/LogoMarqueeWrapper";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 
 /* ── Placeholder data (will be replaced by Supabase queries) ── */
@@ -57,7 +57,7 @@ export default async function HomePage() {
       <CategoryNavBar services={services ?? []} />
 
       {/* ────────────── 1c. Logo Marquee ────────────── */}
-      <LogoMarquee />
+      <LogoMarqueeWrapper />
 
       {/* ────────────── 2. Why Panther ────────────── */}
       <section className="bg-white py-20 lg:py-28">
