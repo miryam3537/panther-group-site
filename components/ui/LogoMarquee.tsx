@@ -1,7 +1,15 @@
 "use client";
 
-// Placeholder logos — text-based with styled boxes until real logos are added via Supabase/admin
-const LOGOS = [
+import Image from "next/image";
+
+export type LogoItem = {
+  id: string;
+  name: string;
+  image_url: string;
+};
+
+// Fallback placeholder text when no logos uploaded yet
+const PLACEHOLDER_LOGOS = [
   "לקוח מוביל",
   "מותג פרמיום",
   "חברה גדולה",
@@ -12,9 +20,41 @@ const LOGOS = [
   "מותג ידוע",
 ];
 
-export function LogoMarquee() {
-  // Duplicate the array to create seamless loop
-  const items = [...LOGOS, ...LOGOS];
+interface Props {
+  logos?: LogoItem[];
+}
+
+export function LogoMarquee({ logos }: Props) {
+  const hasRealLogos = logos && logos.length > 0;
+
+  if (!hasRealLogos) {
+    // Fallback: text placeholders
+    const items = [...PLACEHOLDER_LOGOS, ...PLACEHOLDER_LOGOS];
+    return (
+      <section className="overflow-hidden border-y border-white/6 bg-[#060606] py-10">
+        <div className="mb-6 text-center">
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-white/25">מותגים שבחרו בנו</p>
+        </div>
+        <div className="relative">
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-[#060606] to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-[#060606] to-transparent" />
+          <div className="flex w-max animate-marquee gap-8">
+            {items.map((logo, i) => (
+              <div
+                key={i}
+                className="flex h-14 w-36 shrink-0 items-center justify-center rounded-xl border border-white/8 bg-white/[0.03] px-4 text-sm font-semibold text-white/30 transition-colors hover:border-accent/30 hover:text-white/50"
+              >
+                {logo}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Real logos — duplicate for seamless loop
+  const items = [...logos, ...logos];
 
   return (
     <section className="overflow-hidden border-y border-white/6 bg-[#060606] py-10">
@@ -31,10 +71,17 @@ export function LogoMarquee() {
         <div className="flex w-max animate-marquee gap-8">
           {items.map((logo, i) => (
             <div
-              key={i}
-              className="flex h-14 w-36 shrink-0 items-center justify-center rounded-xl border border-white/8 bg-white/[0.03] px-4 text-sm font-semibold text-white/30 transition-colors hover:border-accent/30 hover:text-white/50"
+              key={`${logo.id}-${i}`}
+              className="flex h-20 w-40 shrink-0 items-center justify-center rounded-xl border border-white/8 bg-white/[0.03] px-4 transition-colors hover:border-accent/30"
+              title={logo.name}
             >
-              {logo}
+              <Image
+                src={logo.image_url}
+                alt={logo.name}
+                width={120}
+                height={60}
+                className="h-12 w-auto max-w-[120px] object-contain opacity-60 transition-opacity hover:opacity-90"
+              />
             </div>
           ))}
         </div>
