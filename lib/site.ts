@@ -31,6 +31,17 @@ export const services = [
 
 export type Service = (typeof services)[number];
 
+export const serviceSubcategories: Record<string, string[]> = {
+  branding:     ["מיתוג לעסקים", "מיתוג למוסדות"],
+  promotions:   ["מתנות"],
+  events:       [],
+  print:        ["ניירת", "ספרים וחוברות", "משי", "סובלימציה", "רקמה"],
+  digital:      ["דפי נחיתה", "אתרים", "באנרים מונפשים"],
+  signage:      ["עסקים", "מוסדות", "בתי כנסת"],
+  distribution: ["הפצה תיבות דואר", "הפצת תלי דלת"],
+  posters:      ["לוחות פרסום בבית כנסת", "לוחות בבניינים", "לוחות במרחב העירוני"],
+};
+
 /** תת-מחלקות לכל מחלקה */
 export const serviceSubcategories: Record<string, string[]> = {
   branding:     ["מיתוג לעסקים", "מיתוג למוסדות"],
