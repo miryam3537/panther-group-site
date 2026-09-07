@@ -97,17 +97,6 @@ function Lightbox({
   );
 }
 
-/** Alternating landscape / portrait for branding masonry */
-function brandingTileClass(i: number): string {
-  // Pattern: wide, tall, wide, tall, extra-wide, tall...
-  const pattern = i % 5;
-  if (pattern === 0) return "aspect-[4/3] sm:col-span-2";
-  if (pattern === 1) return "aspect-[3/4]";
-  if (pattern === 2) return "aspect-[16/10]";
-  if (pattern === 3) return "aspect-[3/4]";
-  return "aspect-[5/3] sm:col-span-2";
-}
-
 export function CategoryGalleryGrid({
   images,
   isBranding,
@@ -139,29 +128,30 @@ export function CategoryGalleryGrid({
   return (
     <>
       {isBranding ? (
-        /* Branding — modern mixed rectangles */
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
+        /* Branding — true CSS masonry (columns) so every image keeps its natural proportions */
+        <div className="columns-2 gap-3 sm:columns-3 lg:columns-4 lg:gap-4">
           {images.map((img, i) => (
-            <button
-              key={img.id}
-              type="button"
-              onClick={() => setOpenIndex(i)}
-              className={`group relative overflow-hidden ${radius} bg-zinc-900 ${brandingTileClass(i)} focus:outline-none focus-visible:ring-2 focus-visible:ring-accent`}
-            >
-              <Image
-                src={img.url}
-                alt=""
-                fill
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/20" />
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <span className="rounded-full border border-white/40 bg-black/40 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white backdrop-blur-sm">
-                  הגדל
-                </span>
-              </div>
-            </button>
+            <div key={img.id} className="mb-3 break-inside-avoid lg:mb-4">
+              <button
+                type="button"
+                onClick={() => setOpenIndex(i)}
+                className={`group relative block w-full overflow-hidden ${radius} bg-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={img.url}
+                  alt=""
+                  className="block w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading={i < 6 ? "eager" : "lazy"}
+                />
+                <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/25" />
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <span className="rounded-full border border-white/40 bg-black/40 px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest text-white backdrop-blur-sm">
+                    הגדל
+                  </span>
+                </div>
+              </button>
+            </div>
           ))}
         </div>
       ) : (
