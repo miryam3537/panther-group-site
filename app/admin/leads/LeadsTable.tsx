@@ -199,6 +199,7 @@ export function LeadsTable({ initialLeads }: { initialLeads: Lead[] }) {
   const [toggling, setToggling] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [emailLead, setEmailLead] = useState<Lead | null>(null);
+  const [expandedMsg, setExpandedMsg] = useState<string | null>(null);
 
   const filtered = leads.filter((l) => {
     const statusOk =
@@ -255,6 +256,38 @@ export function LeadsTable({ initialLeads }: { initialLeads: Lead[] }) {
       {/* Email Modal */}
       {emailLead && (
         <EmailModal lead={emailLead} onClose={() => setEmailLead(null)} />
+      )}
+
+      {/* Message Expand Modal */}
+      {expandedMsg && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+          onClick={() => setExpandedMsg(null)}
+        >
+          <div
+            className="w-full max-w-lg rounded-2xl border border-white/10 bg-[#0e0e0e] p-6 shadow-2xl text-right"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <button
+                onClick={() => setExpandedMsg(null)}
+                className="text-white/30 hover:text-white transition-colors text-lg leading-none"
+              >
+                ✕
+              </button>
+              <h2 className="text-base font-semibold text-white">תוכן הפנייה</h2>
+            </div>
+            <div className="rounded-xl border border-white/8 bg-white/4 p-4">
+              <p className="whitespace-pre-wrap text-sm leading-relaxed text-white/80">{expandedMsg}</p>
+            </div>
+            <button
+              onClick={() => setExpandedMsg(null)}
+              className="mt-4 w-full rounded-xl border border-white/10 py-2.5 text-sm text-white/50 transition-all hover:border-white/30 hover:text-white"
+            >
+              סגור
+            </button>
+          </div>
+        </div>
       )}
 
       {/* Row 1 — Status filter */}
@@ -389,6 +422,15 @@ export function LeadsTable({ initialLeads }: { initialLeads: Lead[] }) {
                     </td>
                     <td className="max-w-xs px-5 py-4 text-white/60">
                       <p className="line-clamp-2">{msg ?? "—"}</p>
+                      {msg && msg.length > 80 && (
+                        <button
+                          type="button"
+                          onClick={() => setExpandedMsg(msg)}
+                          className="mt-1 text-[11px] font-semibold text-accent/70 hover:text-accent transition-colors"
+                        >
+                          הצג הכל ↓
+                        </button>
+                      )}
                     </td>
                     <td className="px-5 py-4">
                       <button
