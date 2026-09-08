@@ -72,15 +72,15 @@ export function LogoMarquee({ logos }: Props) {
           {items.map((logo, i) => (
             <div
               key={`${logo.id}-${i}`}
-              className="flex h-20 w-40 shrink-0 items-center justify-center rounded-xl border border-white/8 bg-white/[0.03] px-4 transition-colors hover:border-accent/30"
+              className="flex h-20 w-44 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white px-5 transition-all hover:border-accent/40 hover:shadow-md hover:shadow-accent/10"
               title={logo.name}
             >
               <Image
                 src={logo.image_url}
                 alt={logo.name}
-                width={120}
-                height={60}
-                className="h-12 w-auto max-w-[120px] object-contain opacity-60 transition-opacity hover:opacity-90"
+                width={130}
+                height={64}
+                className="h-12 w-auto max-w-[130px] object-contain transition-opacity opacity-80 hover:opacity-100"
               />
             </div>
           ))}
