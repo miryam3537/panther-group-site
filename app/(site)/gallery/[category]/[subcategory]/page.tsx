@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { CategoryGalleryGrid } from "@/components/ui/CategoryGalleryGrid";
-import { ViewCounter } from "@/components/ui/ViewCounter";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 import { serviceSubcategories } from "@/lib/site";
 
@@ -118,7 +117,6 @@ export default async function SubcategoryGalleryPage({
                   {imgs.length} פרויקטים
                 </span>
               )}
-              <ViewCounter id={`${category}-${subcategory}`} />
             </div>
           </div>
 

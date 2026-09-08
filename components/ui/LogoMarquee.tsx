@@ -28,8 +28,8 @@ export function LogoMarquee({ logos }: Props) {
   const hasRealLogos = logos && logos.length > 0;
 
   if (!hasRealLogos) {
-    // Fallback: text placeholders
-    const items = [...PLACEHOLDER_LOGOS, ...PLACEHOLDER_LOGOS];
+    // Fallback: text placeholders — 4 copies ensures no empty gap
+    const items = [...PLACEHOLDER_LOGOS, ...PLACEHOLDER_LOGOS, ...PLACEHOLDER_LOGOS, ...PLACEHOLDER_LOGOS];
     return (
       <section className="overflow-hidden border-y border-white/6 bg-[#060606] py-10">
         <div className="mb-6 text-center">
@@ -53,8 +53,8 @@ export function LogoMarquee({ logos }: Props) {
     );
   }
 
-  // Real logos — duplicate for seamless loop
-  const items = [...logos, ...logos];
+  // Real logos — 4 copies ensures seamless loop with no empty gap
+  const items = [...logos, ...logos, ...logos, ...logos];
 
   return (
     <section className="overflow-hidden border-y border-white/6 bg-[#060606] py-10">
