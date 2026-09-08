@@ -69,12 +69,21 @@ export default async function GalleryPage() {
             </p>
           </div>
 
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {categoryData.map((cat, idx) => (
-              <Card3D key={cat.slug}>
+          <div
+            className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3"
+            style={{ gridAutoRows: "260px" }}
+          >
+            {categoryData.map((cat, idx) => {
+              const row = Math.floor(idx / 2);
+              const pos = idx % 2;
+              const isWide =
+                (row % 2 === 0 && pos === 0) || (row % 2 === 1 && pos === 1);
+
+              return (
+              <Card3D key={cat.slug} className={isWide ? "sm:col-span-2" : "sm:col-span-1"}>
               <Link
                 href={`/gallery/${cat.slug}`}
-                className="group relative block aspect-[4/3] overflow-hidden rounded-2xl border border-white/8 bg-zinc-900 transition-[border-color] duration-300 hover:border-accent/50"
+                className="group relative block h-full overflow-hidden rounded-2xl border border-white/8 bg-zinc-900 transition-[border-color] duration-300 hover:border-accent/50"
               >
                 {/* Background image or empty state */}
                 {cat.coverUrl ? (
@@ -82,7 +91,7 @@ export default async function GalleryPage() {
                     src={cat.coverUrl}
                     alt={cat.title}
                     fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    sizes={isWide ? "(max-width: 640px) 100vw, 66vw" : "(max-width: 640px) 100vw, 33vw"}
                     priority={idx < 3}
                     className="object-cover transition-transform duration-700 group-hover:scale-108"
                   />
@@ -139,7 +148,8 @@ export default async function GalleryPage() {
                 <div className="absolute inset-x-0 bottom-0 h-[2px] scale-x-0 rounded-full bg-accent transition-transform duration-300 group-hover:scale-x-100" />
               </Link>
               </Card3D>
-            ))}
+              );
+            })}
           </div>
         </Container>
       </section>
