@@ -1,198 +1,218 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "@/components/layout/Container";
 
-const METRICS = [
-  { value: "+340%", label: "נוכחות דיגיטלית" },
-  { value: "×3",    label: "לידים איכותיים"  },
-  { value: "+89%",  label: "זיהוי המותג"     },
-];
-
-export function LeapMeter() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+/* ── Continuous count-up hook ─────────────────────────────────
+   Counts from 0 → target over `duration` seconds,
+   pauses 1.5 s at the top, then resets and repeats.
+   Each metric uses a different `delay` so they don't sync up. */
+function useCountUp(target: number, duration: number, delay: number) {
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
-      { threshold: 0.25 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
+    let startTs: number | null = null;
+    let frame: number;
 
+    function loop(ts: number) {
+      if (startTs === null) startTs = ts + delay * 1000;
+      const elapsed = ts - startTs;
+
+      if (elapsed < 0) {
+        frame = requestAnimationFrame(loop);
+        return;
+      }
+
+      const progress = Math.min(elapsed / (duration * 1000), 1);
+      setCount(Math.floor(progress * target));
+
+      if (progress < 1) {
+        frame = requestAnimationFrame(loop);
+      } else {
+        // Pause at peak, then restart
+        setTimeout(() => {
+          startTs = null;
+          setCount(0);
+          frame = requestAnimationFrame(loop);
+        }, 1500);
+      }
+    }
+
+    frame = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(frame);
+  }, [target, duration, delay]);
+
+  return count;
+}
+
+/* ── Metric counter cell ──────────────────────────────────────── */
+function MetricCounter({
+  prefix = "",
+  target,
+  suffix = "",
+  label,
+  duration,
+  delay,
+}: {
+  prefix?: string;
+  target: number;
+  suffix?: string;
+  label: string;
+  duration: number;
+  delay: number;
+}) {
+  const count = useCountUp(target, duration, delay);
   return (
-    <section ref={ref} className="relative overflow-hidden bg-[#060606] py-24 lg:py-32">
-      {/* Ambient orange glow — right side where chart lives */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_60%_at_75%_55%,rgba(249,115,22,0.055),transparent)]" />
+    <div className="text-right">
+      <p className="text-4xl font-black tabular-nums text-accent">
+        {prefix}{count}{suffix}
+      </p>
+      <p className="mt-1 text-[11px] leading-snug text-white/30">{label}</p>
+    </div>
+  );
+}
 
+/* ── Scrolling live chart path (900 px wide, naturally rising) ── */
+const CHART_PATH =
+  "M 0 175 C 20 172, 40 168, 60 165 " +
+  "C 80 162, 100 170, 120 158 " +
+  "C 140 146, 160 150, 180 140 " +
+  "C 200 130, 220 135, 240 120 " +
+  "C 260 105, 280 110, 300 95 " +
+  "C 320 80, 340 85, 360 70 " +
+  "C 380 55, 400 60, 420 45 " +
+  "C 440 30, 460 35, 480 25 " +
+  "C 500 15, 520 20, 540 12 " +
+  "C 560 5, 580 8, 600 10 " +
+  "C 620 12, 640 8, 660 5 " +
+  "C 680 8, 700 5, 720 8 " +
+  "C 740 12, 760 8, 780 5 " +
+  "C 800 8, 820 5, 840 8 " +
+  "C 860 5, 880 8, 900 5";
+
+/* ── Main component ───────────────────────────────────────────── */
+export function LeapMeter() {
+  return (
+    <section className="relative overflow-hidden bg-[#070707] py-24 lg:py-32">
       <Container>
         <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-20" dir="rtl">
 
-          {/* ── Left: Text + metrics ── */}
+          {/* ── Left: Headline + metrics ── */}
           <div className="text-right">
-            <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.35em] text-accent/60">
-              הזינוק של פנתר
-            </p>
-            <h2 className="text-4xl font-black leading-[1.1] text-white sm:text-5xl">
-              העסק שלך
-              <br />
-              <span className="text-accent">לפני ואחרי.</span>
-            </h2>
-            <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/35">
-              עסקים שעובדים עם פנתר לא סתם &quot;נראים טוב&quot; — הם צומחים.
-              זה מה שהנתונים מראים.
+            <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.4em] text-white/25">
+              נתוני צמיחה אמיתיים
             </p>
 
-            {/* Metric counters */}
-            <div className="mt-10 flex gap-8">
-              {METRICS.map((m, i) => (
-                <div
-                  key={m.label}
-                  className="text-right"
-                  style={{
-                    opacity: visible ? 1 : 0,
-                    transform: visible ? "translateY(0)" : "translateY(16px)",
-                    transition: `opacity 0.6s ease ${0.4 + i * 0.15}s, transform 0.6s ease ${0.4 + i * 0.15}s`,
-                  }}
-                >
-                  <p className="text-3xl font-black text-accent">{m.value}</p>
-                  <p className="mt-1 text-[11px] leading-snug text-white/30">{m.label}</p>
-                </div>
-              ))}
+            <h2 className="text-5xl font-black leading-[1.05] text-white sm:text-6xl">
+              הצמיחה
+              <br />
+              לא עוצרת.
+            </h2>
+
+            {/* Continuous metric counters */}
+            <div className="mt-12 flex gap-10">
+              <MetricCounter
+                prefix="+"
+                target={340}
+                suffix="%"
+                label="נוכחות"
+                duration={2.2}
+                delay={0}
+              />
+              <MetricCounter
+                prefix="×"
+                target={3}
+                suffix=""
+                label="לידים"
+                duration={1.6}
+                delay={0.5}
+              />
+              <MetricCounter
+                prefix="+"
+                target={89}
+                suffix="%"
+                label="מותג"
+                duration={1.9}
+                delay={1.1}
+              />
             </div>
 
             <a
               href="/contact"
-              className="btn-cta mt-10 inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-bold text-white shadow-[0_0_24px_rgba(249,115,22,0.28)] transition-all hover:bg-accent-hover hover:scale-105"
+              className="btn-cta mt-12 inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-bold text-white transition-all hover:bg-accent-hover hover:scale-105"
             >
               אנחנו נוביל את הזינוק שלך «
             </a>
           </div>
 
-          {/* ── Right: SVG Line chart ── */}
-          <div className="relative">
-            {/* Top labels */}
-            <div className="mb-3 flex justify-between px-1 text-[11px] font-semibold" dir="ltr">
-              <span className="text-white/20">לפני פנתר</span>
-              <span className="text-accent/50">עם פנתר ◆</span>
+          {/* ── Right: Live chart card ── */}
+          <div className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-5">
+            {/* Header row */}
+            <div className="mb-5 flex items-center justify-between" dir="ltr">
+              <span className="text-[11px] font-semibold text-white/30">
+                Performance Index
+              </span>
+              {/* LIVE badge */}
+              <div className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+                <span className="text-[10px] font-bold tracking-widest text-emerald-400">
+                  LIVE
+                </span>
+              </div>
             </div>
 
-            {/* Chart card */}
-            <div className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.018] p-5">
+            {/* Scrolling chart — clipped viewport */}
+            <div className="relative overflow-hidden rounded-xl" style={{ height: 200 }}>
+              {/* Horizontal grid lines (static, behind) */}
               <svg
+                className="pointer-events-none absolute inset-0 h-full w-full"
                 viewBox="0 0 400 200"
-                className="w-full"
                 preserveAspectRatio="none"
                 aria-hidden="true"
               >
-                <defs>
-                  {/* Before area gradient */}
-                  <linearGradient id="lm-before-grad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%"   stopColor="rgba(120,120,120,0.12)" />
-                    <stop offset="100%" stopColor="rgba(120,120,120,0)"    />
-                  </linearGradient>
-                  {/* After area gradient */}
-                  <linearGradient id="lm-after-grad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%"   stopColor="rgba(249,115,22,0.28)" />
-                    <stop offset="100%" stopColor="rgba(249,115,22,0)"    />
-                  </linearGradient>
-                  {/* Orange line glow */}
-                  <filter id="lm-glow" x="-20%" y="-50%" width="140%" height="200%">
-                    <feGaussianBlur stdDeviation="3.5" result="blur" />
-                    <feMerge>
-                      <feMergeNode in="blur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                </defs>
-
-                {/* Subtle horizontal grid lines */}
                 {[40, 80, 120, 160].map((y) => (
-                  <line key={y} x1="0" y1={y} x2="400" y2={y}
-                    stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
+                  <line
+                    key={y}
+                    x1="0" y1={y} x2="400" y2={y}
+                    stroke="rgba(255,255,255,0.04)"
+                    strokeWidth="1"
+                  />
                 ))}
-
-                {/* ── BEFORE area + line ── */}
-                <path
-                  d="M 0 155 C 40 153, 80 158, 130 154 C 155 152, 168 156, 185 153 L 185 200 L 0 200 Z"
-                  fill="url(#lm-before-grad)"
-                />
-                <path
-                  d="M 0 155 C 40 153, 80 158, 130 154 C 155 152, 168 156, 185 153"
-                  fill="none"
-                  stroke="rgba(140,140,140,0.4)"
-                  strokeWidth="1.8"
-                />
-
-                {/* ── "Panther moment" dashed divider ── */}
-                <line x1="185" y1="10" x2="185" y2="200"
-                  stroke="rgba(249,115,22,0.18)" strokeWidth="1" strokeDasharray="4 4" />
-
-                {/* ── AFTER area — fades in ── */}
-                <path
-                  d="M 185 153 C 215 125, 255 82, 295 48 C 330 22, 368 10, 400 7 L 400 200 L 185 200 Z"
-                  fill="url(#lm-after-grad)"
-                  style={{
-                    opacity: visible ? 1 : 0,
-                    transition: "opacity 0.6s ease 0.7s",
-                  }}
-                />
-
-                {/* ── AFTER line — draws itself ── */}
-                <path
-                  d="M 185 153 C 215 125, 255 82, 295 48 C 330 22, 368 10, 400 7"
-                  fill="none"
-                  stroke="#f97316"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  filter="url(#lm-glow)"
-                  style={{
-                    strokeDasharray: 320,
-                    strokeDashoffset: visible ? 0 : 320,
-                    transition: "stroke-dashoffset 1.3s cubic-bezier(0.4, 0, 0.2, 1) 0.3s",
-                  }}
-                />
-
-                {/* Glowing dot at the end */}
-                <circle
-                  cx="400" cy="7" r="5"
-                  fill="#f97316"
-                  filter="url(#lm-glow)"
-                  style={{
-                    opacity: visible ? 1 : 0,
-                    transition: "opacity 0.3s ease 1.5s",
-                  }}
-                />
-
-                {/* Start dot */}
-                <circle cx="0" cy="155" r="3" fill="rgba(140,140,140,0.5)" />
               </svg>
 
-              {/* "Panther moment" badge */}
-              <div
-                className="pointer-events-none absolute left-[44%] top-4 -translate-x-1/2"
+              {/* Scrolling line — two copies side-by-side for seamless loop */}
+              <svg
+                viewBox="0 0 1800 200"
                 style={{
-                  opacity: visible ? 1 : 0,
-                  transform: visible ? "translateY(0) translateX(-50%)" : "translateY(8px) translateX(-50%)",
-                  transition: "opacity 0.4s ease 0.9s, transform 0.4s ease 0.9s",
+                  width: 1800,
+                  height: 200,
+                  animation: "chart-scroll 12s linear infinite",
                 }}
+                aria-hidden="true"
               >
-                <span className="whitespace-nowrap rounded-full border border-accent/30 bg-accent/10 px-2.5 py-0.5 text-[9px] font-bold text-accent/80">
-                  הצטרפות לפנתר
-                </span>
-              </div>
-
-              {/* Month labels */}
-              <div className="mt-2 flex justify-between px-1 text-[9px] text-white/15" dir="ltr">
-                <span>ינואר</span>
-                <span>אפריל</span>
-                <span>יולי</span>
-                <span>דצמבר</span>
-              </div>
+                {/* Copy 1 */}
+                <path
+                  d={CHART_PATH}
+                  fill="none"
+                  stroke="#f97316"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                {/* Copy 2 — offset 900px to the right */}
+                <path
+                  d={CHART_PATH}
+                  transform="translate(900, 0)"
+                  fill="none"
+                  stroke="#f97316"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </div>
           </div>
+
         </div>
       </Container>
     </section>
