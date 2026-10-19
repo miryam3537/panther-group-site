@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { prepareImageForUpload } from "@/lib/prepareImage";
 import { createClient } from "@/lib/supabase";
 import type { ClientLogo } from "./page";
 
@@ -79,14 +80,15 @@ export function LogosClient({ initialLogos }: Props) {
     setUploading(true);
     setError(null);
     const supabase = createClient();
+    const file = await prepareImageForUpload(selectedFile);
 
     // Step 1: Upload to storage
-    const ext = selectedFile.name.split(".").pop();
+    const ext = file.name.split(".").pop();
     const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
     const { error: storageError } = await supabase.storage
       .from("client-logos")
-      .upload(path, selectedFile, { cacheControl: "3600", upsert: false });
+      .upload(path, file, { cacheControl: "3600", upsert: false });
 
     if (storageError) {
       setError(`❌ שגיאת Storage: ${storageError.message}`);

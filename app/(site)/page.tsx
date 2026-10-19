@@ -5,7 +5,6 @@ import { CategoryNavBar } from "@/components/sections/CategoryNavBar";
 import { ServicesPreview } from "@/components/sections/ServicesPreview";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { WhyPantherCards } from "@/components/sections/WhyPantherCards";
-import { LeapMeter } from "@/components/sections/LeapMeter";
 import { GalleryCycler } from "@/components/ui/GalleryCycler";
 import { LogoMarqueeWrapper } from "@/components/ui/LogoMarqueeWrapper";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
@@ -80,10 +79,7 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* ────────────── 3. Leap Meter ────────────── */}
-      <LeapMeter />
-
-      {/* ────────────── 4. Services ────────────── */}
+      {/* ────────────── 3. Services ────────────── */}
       <ServicesPreview />
 
       {/* ────────────── 4. Gallery Preview ────────────── */}

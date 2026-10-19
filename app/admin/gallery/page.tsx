@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { prepareImageForUpload } from "@/lib/prepareImage";
 import { createClient } from "@/lib/supabase";
 import { serviceSubcategories } from "@/lib/site";
 
@@ -97,7 +98,8 @@ export default function AdminGalleryPage() {
     const supabase = createClient();
     let uploaded = 0;
 
-    for (const file of fileArray) {
+    for (const original of fileArray) {
+      const file = await prepareImageForUpload(original);
       const ext = file.name.split(".").pop();
       const subFolder = activeSubcategory ? `${activeSubcategory}/` : "";
       const path = `${activeCategory}/${subFolder}${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;

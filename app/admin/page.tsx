@@ -37,7 +37,7 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-black text-white" dir="rtl">
       {/* Top bar */}
       <header className="border-b border-white/8 bg-black/80 px-6 py-4 backdrop-blur sticky top-0 z-20">
-        <div className="mx-auto flex max-w-4xl items-center justify-between">
+        <div className="mx-auto flex max-w-7xl items-center justify-between">
           <button
             onClick={handleLogout}
             className="rounded-lg border border-white/10 px-4 py-2 text-xs font-medium text-white/50 transition-colors hover:border-white/30 hover:text-white"
@@ -53,7 +53,7 @@ export default function AdminDashboard() {
       </header>
 
       {/* Dashboard */}
-      <main className="mx-auto max-w-4xl px-6 py-16">
+      <main className="mx-auto max-w-7xl px-6 py-16">
         {/* Logo */}
         <div className="mb-12 flex justify-center">
           <Image
@@ -73,7 +73,7 @@ export default function AdminDashboard() {
         </p>
 
         {/* Action cards */}
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {/* Leads */}
           <Link
             href="/admin/leads"
@@ -152,6 +152,33 @@ export default function AdminDashboard() {
             </p>
             <div className="mt-6 flex items-center gap-2 text-xs font-semibold text-accent">
               <span>כניסה לניהול לוגואים</span>
+              <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5 rotate-180 transition-transform duration-300 group-hover:-translate-x-1">
+                <path fillRule="evenodd" d="M6.22 4.22a.75.75 0 011.06 0l3.25 3.25a.75.75 0 010 1.06l-3.25 3.25a.75.75 0 01-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 010-1.06z" clipRule="evenodd" />
+              </svg>
+            </div>
+          </Link>
+
+          <Link
+            href="/admin/testimonials"
+            className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/4 p-8 text-right transition-all duration-300 hover:border-accent/40 hover:bg-white/7"
+          >
+            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/15 transition-all duration-300 group-hover:bg-accent/25">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                className="h-7 w-7 text-accent"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+              </svg>
+            </div>
+            <h2 className="mb-2 text-xl font-black text-white">ניהול המלצות</h2>
+            <p className="text-sm leading-relaxed text-white/40">
+              הוספה, עריכה ומחיקה של המלצות הלקוחות שמופיעות באתר
+            </p>
+            <div className="mt-6 flex items-center gap-2 text-xs font-semibold text-accent">
+              <span>כניסה לניהול המלצות</span>
               <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5 rotate-180 transition-transform duration-300 group-hover:-translate-x-1">
                 <path fillRule="evenodd" d="M6.22 4.22a.75.75 0 011.06 0l3.25 3.25a.75.75 0 010 1.06l-3.25 3.25a.75.75 0 01-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 010-1.06z" clipRule="evenodd" />
               </svg>
