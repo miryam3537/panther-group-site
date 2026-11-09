@@ -23,10 +23,22 @@ const CATEGORIES = [
 
 export default async function GalleryPage() {
   const supabase = await createServerSupabaseClient();
+  const { data: services } = await supabase
+    .from("services")
+    .select("slug, title, image_url")
+    .order("sort_order", { ascending: true });
 
-  // Fetch first image + count per category
+  const categories = services?.length
+    ? services.map((service) => ({
+        slug: service.slug,
+        title: service.title,
+        imageUrl: service.image_url as string | null,
+      }))
+    : CATEGORIES.map((cat) => ({ ...cat, imageUrl: null as string | null }));
+
+  // Prefer the category background, then the first gallery photo.
   const categoryData = await Promise.all(
-    CATEGORIES.map(async (cat) => {
+    categories.map(async (cat) => {
       const { data, count } = await supabase
         .from("gallery_images")
         .select("url", { count: "exact" })
@@ -36,7 +48,7 @@ export default async function GalleryPage() {
 
       return {
         ...cat,
-        coverUrl: data?.[0]?.url ?? null,
+        coverUrl: cat.imageUrl || data?.[0]?.url || null,
         count: count ?? 0,
       };
     })

@@ -102,7 +102,10 @@ export default async function HomePage() {
           </div>
 
           {/* Grid of fixed slots — images cycle every second */}
-          <GalleryCycler images={galleryImages ?? []} />
+          <GalleryCycler
+            images={galleryImages ?? []}
+            labels={Object.fromEntries((services ?? []).map((service) => [service.slug, service.title]))}
+          />
 
           {/* CTA */}
           <div className="mt-10 flex justify-center">

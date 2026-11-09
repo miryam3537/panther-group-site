@@ -27,7 +27,9 @@ export async function generateMetadata({
   params: Promise<{ category: string }>;
 }): Promise<Metadata> {
   const { category } = await params;
-  return { title: `גלריה — ${categoryNames[category] ?? "מחלקה"}` };
+  const supabase = await createServerSupabaseClient();
+  const { data } = await supabase.from("services").select("title").eq("slug", category).maybeSingle();
+  return { title: `גלריה — ${data?.title ?? categoryNames[category] ?? "מחלקה"}` };
 }
 
 export default async function GalleryCategoryPage({
@@ -36,15 +38,14 @@ export default async function GalleryCategoryPage({
   params: Promise<{ category: string }>;
 }) {
   const { category } = await params;
-  const title = categoryNames[category] ?? "גלריה";
-
   const supabase = await createServerSupabaseClient();
 
   const [{ data: serviceData }, { data: images }] = await Promise.all([
-    supabase.from("services").select("image_url, description").eq("slug", category).single(),
+    supabase.from("services").select("title, image_url, description").eq("slug", category).maybeSingle(),
     supabase.from("gallery_images").select("id, url").eq("category", category).is("subcategory", null).order("display_order", { ascending: true }),
   ]);
 
+  const title = serviceData?.title ?? categoryNames[category] ?? "גלריה";
   const heroImageUrl = serviceData?.image_url ?? null;
   const description = serviceData?.description ?? null;
   const imgs = images ?? [];

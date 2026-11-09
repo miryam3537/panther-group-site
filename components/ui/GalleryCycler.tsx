@@ -18,7 +18,13 @@ const LABELS: Record<string, string> = {
 // Total number of visible slots in the grid (4 cols × 2 rows on desktop)
 const SLOT_COUNT = 8;
 
-export function GalleryCycler({ images }: { images: GalleryImg[] }) {
+export function GalleryCycler({
+  images,
+  labels,
+}: {
+  images: GalleryImg[];
+  labels?: Record<string, string>;
+}) {
   const count = Math.min(SLOT_COUNT, images.length);
 
   // Each slot holds: the current image + a version key so React re-mounts the <img> for the fade
@@ -66,7 +72,7 @@ export function GalleryCycler({ images }: { images: GalleryImg[] }) {
           <Image
             key={keys[i]}
             src={img.url}
-            alt={LABELS[img.category] ?? img.category}
+            alt={labels?.[img.category] ?? LABELS[img.category] ?? img.category}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className="gallery-fade-in object-cover transition-transform duration-500 group-hover:scale-105"
@@ -76,7 +82,7 @@ export function GalleryCycler({ images }: { images: GalleryImg[] }) {
           {/* Label: always visible on touch (mobile), hover-reveal on desktop */}
           <div className="absolute inset-x-0 bottom-0 p-3 sm:translate-y-2 sm:p-4 sm:opacity-0 sm:transition-all sm:duration-300 sm:group-hover:translate-y-0 sm:group-hover:opacity-100">
             <span className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-              {LABELS[img.category] ?? img.category}
+              {labels?.[img.category] ?? LABELS[img.category] ?? img.category}
             </span>
             <p className="mt-0.5 hidden text-sm font-semibold text-white/90 sm:block">צפייה בפרויקט ←</p>
           </div>

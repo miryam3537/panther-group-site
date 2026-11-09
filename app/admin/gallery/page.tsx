@@ -30,6 +30,7 @@ const CATEGORIES = [
 
 export default function AdminGalleryPage() {
   const router = useRouter();
+  const [categories, setCategories] = useState(CATEGORIES);
   const [activeCategory, setActiveCategory] = useState(CATEGORIES[0].slug);
   const [activeSubcategory, setActiveSubcategory] = useState<string>("");
   const [images, setImages] = useState<GalleryImage[]>([]);
@@ -49,6 +50,15 @@ export default function AdminGalleryPage() {
     supabase.auth.getSession().then(({ data }) => {
       if (!data.session) router.replace("/admin/login");
     });
+    supabase
+      .from("services")
+      .select("slug, title")
+      .order("sort_order", { ascending: true })
+      .then(({ data }) => {
+        if (data?.length) {
+          setCategories(data.map((service) => ({ slug: service.slug, label: service.title })));
+        }
+      });
   }, [router]);
 
   // Fetch images for active category + subcategory
@@ -228,7 +238,7 @@ export default function AdminGalleryPage() {
 
         {/* ── Category tabs ── */}
         <div className="mb-4 flex flex-wrap gap-2">
-          {CATEGORIES.map((cat) => (
+          {categories.map((cat) => (
             <button
               key={cat.slug}
               onClick={() => { setActiveCategory(cat.slug); setActiveSubcategory(""); }}
