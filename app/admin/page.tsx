@@ -66,10 +66,10 @@ export default function AdminDashboard() {
         </div>
 
         <h1 className="mb-3 text-center text-2xl font-black text-white">
-          ברוכה הבאה
+          ברוך הבא
         </h1>
         <p className="mb-12 text-center text-sm text-white/40">
-          בחרי את הפעולה שברצונך לבצע
+          בחר את הפעולה שברצונך לבצע
         </p>
 
         {/* Action cards */}
