@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase";
 import { prepareImageForUpload } from "@/lib/prepareImage";
+import type { SubcategoryRow } from "@/lib/subcategories";
 
 export type CategoryRow = {
   id: string;
@@ -16,20 +17,27 @@ export type CategoryRow = {
 
 export function CategoriesClient({
   initialItems,
+  initialSubcategories,
   loadError,
 }: {
   initialItems: CategoryRow[];
+  initialSubcategories: SubcategoryRow[];
   loadError: string | null;
 }) {
   const router = useRouter();
   const [items, setItems] = useState(initialItems);
+  const [subItems, setSubItems] = useState(initialSubcategories);
   const [names, setNames] = useState<Record<string, string>>(
     Object.fromEntries(initialItems.map((item) => [item.id, item.title])),
+  );
+  const [subNames, setSubNames] = useState<Record<string, string>>(
+    Object.fromEntries(initialSubcategories.map((item) => [item.id, item.title])),
   );
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(loadError);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const fileInputs = useRef<Record<string, HTMLInputElement | null>>({});
+  const subFileInputs = useRef<Record<string, HTMLInputElement | null>>({});
 
   function showSuccess(msg: string) {
     setSuccessMsg(msg);
@@ -92,6 +100,96 @@ export function CategoriesClient({
         prev.map((row) => (row.id === item.id ? { ...row, image_url: urlData.publicUrl } : row)),
       );
       showSuccess("תמונת הרקע נשמרה");
+    }
+    setBusyId(null);
+  }
+
+  function requireStoredSubcategory(item: SubcategoryRow) {
+    if (item.id.startsWith("fallback-")) {
+      setError("כדי לשמור תת-מחלקה, צריך להריץ פעם אחת את הקובץ supabase/subcategories.sql בסופאבייס.");
+      return false;
+    }
+    return true;
+  }
+
+  async function saveSubName(item: SubcategoryRow) {
+    const title = (subNames[item.id] ?? "").trim();
+    if (!title) {
+      setError("שם תת-המחלקה לא יכול להיות ריק");
+      return;
+    }
+    if (title === item.title || !requireStoredSubcategory(item)) return;
+
+    setBusyId(item.id);
+    setError(null);
+    const supabase = createClient();
+    const { error: updateError } = await supabase
+      .from("service_subcategories")
+      .update({ title })
+      .eq("id", item.id);
+
+    if (updateError) {
+      setError(updateError.message);
+    } else {
+      setSubItems((prev) => prev.map((row) => (row.id === item.id ? { ...row, title } : row)));
+      showSuccess("השם נשמר");
+    }
+    setBusyId(null);
+  }
+
+  async function uploadSubBackground(item: SubcategoryRow, file: File) {
+    if (!requireStoredSubcategory(item)) return;
+    setBusyId(item.id);
+    setError(null);
+    const supabase = createClient();
+    const prepared = await prepareImageForUpload(file);
+    const ext = prepared.name.split(".").pop() || "webp";
+    const path = `backgrounds/${item.service_slug}/${item.slug}/${Date.now()}.${ext}`;
+
+    const { error: storageError } = await supabase.storage
+      .from("gallery")
+      .upload(path, prepared, { cacheControl: "3600", upsert: false });
+
+    if (storageError) {
+      setError(storageError.message);
+      setBusyId(null);
+      return;
+    }
+
+    const { data: urlData } = supabase.storage.from("gallery").getPublicUrl(path);
+    const { error: updateError } = await supabase
+      .from("service_subcategories")
+      .update({ image_url: urlData.publicUrl })
+      .eq("id", item.id);
+
+    if (updateError) {
+      setError(updateError.message);
+    } else {
+      setSubItems((prev) =>
+        prev.map((row) => (row.id === item.id ? { ...row, image_url: urlData.publicUrl } : row)),
+      );
+      showSuccess("תמונת הרקע נשמרה");
+    }
+    setBusyId(null);
+  }
+
+  async function clearSubBackground(item: SubcategoryRow) {
+    if (!requireStoredSubcategory(item)) return;
+    setBusyId(item.id);
+    setError(null);
+    const supabase = createClient();
+    const { error: updateError } = await supabase
+      .from("service_subcategories")
+      .update({ image_url: null })
+      .eq("id", item.id);
+
+    if (updateError) {
+      setError(updateError.message);
+    } else {
+      setSubItems((prev) =>
+        prev.map((row) => (row.id === item.id ? { ...row, image_url: null } : row)),
+      );
+      showSuccess("תמונת הרקע הוסרה מהאתר");
     }
     setBusyId(null);
   }
@@ -164,9 +262,9 @@ export function CategoriesClient({
           </div>
         )}
 
-        <h1 className="mb-2 text-2xl font-black">קטגוריות</h1>
+        <h1 className="mb-2 text-2xl font-black">קטגוריות ותתי מחלקות</h1>
         <p className="mb-8 text-sm text-white/40">
-          שינוי השם מופיע באתר. תמונת הרקע מוצגת בראש עמוד הקטגוריה ובכרטיס בגלריה.
+          שינוי השם מופיע באתר. תמונת הרקע של קטגוריה מוצגת בראש העמוד ובכרטיס בגלריה, ותמונת הרקע של תת-מחלקה מוצגת בכרטיס שלה ובראש העמוד שלה.
         </p>
 
         <div className="grid gap-5 sm:grid-cols-2">
@@ -230,6 +328,83 @@ export function CategoriesClient({
               </div>
             </article>
           ))}
+        </div>
+
+        <h2 className="mb-2 mt-14 text-2xl font-black">תתי מחלקות</h2>
+        <p className="mb-8 text-sm text-white/40">הקישור של כל תת-מחלקה נשאר קבוע, כדי שהתמונות שכבר משויכות אליה יישארו במקום.</p>
+
+        <div className="space-y-10">
+          {items.map((category) => {
+            const subs = subItems.filter((sub) => sub.service_slug === category.slug);
+            if (subs.length === 0) return null;
+            return (
+              <section key={category.id}>
+                <h3 className="mb-4 text-sm font-bold text-accent">{category.title}</h3>
+                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {subs.map((item) => (
+                    <article key={item.id} className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03]">
+                      <div className="relative h-32 bg-zinc-900">
+                        {item.image_url ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={item.image_url} alt="" className="h-full w-full object-cover" />
+                        ) : (
+                          <div className="flex h-full items-center justify-center text-sm text-white/30">
+                            אין תמונת רקע
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-5">
+                        <label className="mb-2 block text-xs font-semibold text-white/50">שם תת-המחלקה</label>
+                        <input
+                          value={subNames[item.id] ?? ""}
+                          onChange={(e) => setSubNames((prev) => ({ ...prev, [item.id]: e.target.value }))}
+                          className="mb-4 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white focus:border-accent/50 focus:outline-none focus:ring-1 focus:ring-accent/30"
+                        />
+                        <div className="flex flex-wrap gap-2">
+                          <button
+                            onClick={() => saveSubName(item)}
+                            disabled={busyId === item.id}
+                            className="rounded-xl bg-accent px-4 py-2.5 text-xs font-black text-white disabled:opacity-40"
+                          >
+                            שמירת שם
+                          </button>
+                          <button
+                            onClick={() => subFileInputs.current[item.id]?.click()}
+                            disabled={busyId === item.id}
+                            className="rounded-xl border border-white/15 px-4 py-2.5 text-xs font-semibold text-white/80 disabled:opacity-40"
+                          >
+                            {item.image_url ? "החלפת רקע" : "העלאת רקע"}
+                          </button>
+                          {item.image_url && (
+                            <button
+                              onClick={() => clearSubBackground(item)}
+                              disabled={busyId === item.id}
+                              className="rounded-xl border border-white/10 px-4 py-2.5 text-xs text-white/50 disabled:opacity-40"
+                            >
+                              הסרת רקע
+                            </button>
+                          )}
+                        </div>
+                        <input
+                          ref={(node) => {
+                            subFileInputs.current[item.id] = node;
+                          }}
+                          type="file"
+                          accept="image/png,image/jpeg,image/webp"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            e.target.value = "";
+                            if (file) uploadSubBackground(item, file);
+                          }}
+                        />
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
         </div>
       </main>
     </div>

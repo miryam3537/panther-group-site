@@ -6,7 +6,7 @@ import { ContactForm } from "@/components/sections/ContactForm";
 import { CategoryGalleryGrid } from "@/components/ui/CategoryGalleryGrid";
 import { Card3D } from "@/components/ui/Card3D";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
-import { serviceSubcategories } from "@/lib/site";
+import { subcategoriesFor } from "@/lib/subcategories";
 
 const categoryNames: Record<string, string> = {
   branding:     "מיתוג ופרסום",
@@ -40,9 +40,10 @@ export default async function GalleryCategoryPage({
   const { category } = await params;
   const supabase = await createServerSupabaseClient();
 
-  const [{ data: serviceData }, { data: images }] = await Promise.all([
+  const [{ data: serviceData }, { data: images }, { data: subRows, error: subError }] = await Promise.all([
     supabase.from("services").select("title, image_url, description").eq("slug", category).maybeSingle(),
     supabase.from("gallery_images").select("id, url").eq("category", category).is("subcategory", null).order("display_order", { ascending: true }),
+    supabase.from("service_subcategories").select("service_slug, slug, title, image_url, sort_order").eq("service_slug", category).order("sort_order", { ascending: true }),
   ]);
 
   const title = serviceData?.title ?? categoryNames[category] ?? "גלריה";
@@ -50,7 +51,7 @@ export default async function GalleryCategoryPage({
   const description = serviceData?.description ?? null;
   const imgs = images ?? [];
   const isBranding = category === "branding";
-  const subcats = serviceSubcategories[category] ?? [];
+  const subcats = subcategoriesFor(category, subError ? null : (subRows ?? []));
 
   // Fetch cover image + count per subcategory
   const subcatData = await Promise.all(
@@ -62,7 +63,7 @@ export default async function GalleryCategoryPage({
         .eq("subcategory", sub.slug)
         .order("display_order", { ascending: true })
         .limit(1);
-      return { ...sub, coverUrl: data?.[0]?.url ?? null, count: count ?? 0 };
+      return { ...sub, coverUrl: sub.image_url ?? data?.[0]?.url ?? null, count: count ?? 0 };
     })
   );
 
@@ -280,7 +281,7 @@ export default async function GalleryCategoryPage({
             <div className="flex items-center gap-3">
               <div className="h-[2px] w-8 rounded-full bg-accent" />
               <h2 className="text-sm font-bold uppercase tracking-widest text-white/40">
-                {subcats.length > 0 ? "עבודות ללא תת-מחלקה" : "עבודות נבחרות"}
+                {subcats.length > 0 ? "כללי" : "עבודות נבחרות"}
               </h2>
             </div>
             {imgs.length > 0 && (

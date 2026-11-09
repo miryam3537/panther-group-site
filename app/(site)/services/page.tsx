@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Container } from "@/components/layout/Container";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
-import { serviceSubcategories, type Subcategory } from "@/lib/site";
+import { subcategoriesFor } from "@/lib/subcategories";
 
 export const metadata: Metadata = { title: "שירותים" };
 
@@ -19,10 +19,10 @@ type Service = {
 
 export default async function ServicesPage() {
   const supabase = await createServerSupabaseClient();
-  const { data, error } = await supabase
-    .from("services")
-    .select("*")
-    .order("sort_order");
+  const [{ data, error }, { data: subRows, error: subError }] = await Promise.all([
+    supabase.from("services").select("*").order("sort_order"),
+    supabase.from("service_subcategories").select("service_slug, slug, title, sort_order").order("sort_order"),
+  ]);
 
   // Fallback to static data if DB fails
   const servicesData: Service[] = error || !data?.length
@@ -60,6 +60,7 @@ export default async function ServicesPage() {
 
       {/* ── Service sections ── */}
       {servicesData.map((service, index) => {
+        const subs = subcategoriesFor(service.slug, subError ? null : (subRows ?? []));
         const isDark = index % 2 === 0;
         const isReversed = index % 2 !== 0;
         const num = String(index + 1).padStart(2, "0");
@@ -125,9 +126,9 @@ export default async function ServicesPage() {
                       {service.description}
                     </p>
                     {/* תת-מחלקות */}
-                    {(serviceSubcategories[service.slug] ?? []).length > 0 && (
+                    {subs.length > 0 && (
                       <div className="mt-4 flex flex-wrap gap-2">
-                        {(serviceSubcategories[service.slug] as Subcategory[]).map((sub) => (
+                        {subs.map((sub) => (
                           <Link
                             key={sub.slug}
                             href={`/gallery/${service.slug}/${sub.slug}`}

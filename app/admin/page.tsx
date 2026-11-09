@@ -202,7 +202,7 @@ export default function AdminDashboard() {
             </div>
             <h2 className="mb-2 text-xl font-black text-white">ניהול קטגוריות</h2>
             <p className="text-sm leading-relaxed text-white/40">
-              עריכת שם הקטגוריה והעלאת תמונת רקע
+              עריכת שם ותמונת רקע של הקטגוריות ותתי המחלקות
             </p>
             <div className="mt-6 flex items-center gap-2 text-xs font-semibold text-accent">
               <span>כניסה לניהול קטגוריות</span>

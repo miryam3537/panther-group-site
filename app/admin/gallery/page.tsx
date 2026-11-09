@@ -31,6 +31,7 @@ const CATEGORIES = [
 export default function AdminGalleryPage() {
   const router = useRouter();
   const [categories, setCategories] = useState(CATEGORIES);
+  const [subcatMap, setSubcatMap] = useState(serviceSubcategories);
   const [activeCategory, setActiveCategory] = useState(CATEGORIES[0].slug);
   const [activeSubcategory, setActiveSubcategory] = useState<string>("");
   const [images, setImages] = useState<GalleryImage[]>([]);
@@ -42,7 +43,7 @@ export default function AdminGalleryPage() {
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const currentSubcats = serviceSubcategories[activeCategory] ?? [];
+  const currentSubcats = subcatMap[activeCategory] ?? [];
 
   // Auth check
   useEffect(() => {
@@ -58,6 +59,19 @@ export default function AdminGalleryPage() {
         if (data?.length) {
           setCategories(data.map((service) => ({ slug: service.slug, label: service.title })));
         }
+      });
+    supabase
+      .from("service_subcategories")
+      .select("service_slug, slug, title, sort_order")
+      .order("sort_order", { ascending: true })
+      .then(({ data, error: subError }) => {
+        if (subError || !data?.length) return;
+        const next: Record<string, { slug: string; title: string }[]> = {};
+        for (const key of Object.keys(serviceSubcategories)) next[key] = [];
+        for (const row of data) {
+          (next[row.service_slug] ??= []).push({ slug: row.slug, title: row.title });
+        }
+        setSubcatMap(next);
       });
   }, [router]);
 
@@ -264,7 +278,7 @@ export default function AdminGalleryPage() {
                   : "border border-white/10 text-white/40 hover:border-white/30 hover:text-white"
               }`}
             >
-              ללא תת-מחלקה
+              כללי
             </button>
             {currentSubcats.map((sub) => (
               <button

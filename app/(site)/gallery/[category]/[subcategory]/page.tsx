@@ -5,7 +5,7 @@ import { Container } from "@/components/layout/Container";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { CategoryGalleryGrid } from "@/components/ui/CategoryGalleryGrid";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
-import { serviceSubcategories } from "@/lib/site";
+import { subcategoryTitle } from "@/lib/subcategories";
 
 const categoryNames: Record<string, string> = {
   branding:     "מיתוג ופרסום",
@@ -26,10 +26,12 @@ export async function generateMetadata({
   params: Promise<{ category: string; subcategory: string }>;
 }): Promise<Metadata> {
   const { category, subcategory } = await params;
-  const subcats = serviceSubcategories[category] ?? [];
-  const subTitle = subcats.find((s) => s.slug === subcategory)?.title ?? subcategory;
   const supabase = await createServerSupabaseClient();
-  const { data } = await supabase.from("services").select("title").eq("slug", category).maybeSingle();
+  const [{ data }, { data: subRow, error: subError }] = await Promise.all([
+    supabase.from("services").select("title").eq("slug", category).maybeSingle(),
+    supabase.from("service_subcategories").select("title").eq("service_slug", category).eq("slug", subcategory).maybeSingle(),
+  ]);
+  const subTitle = subcategoryTitle(category, subcategory, subRow, Boolean(subError));
   const catTitle = data?.title ?? categoryNames[category] ?? category;
   return { title: `גלריה — ${catTitle} / ${subTitle}` };
 }
@@ -41,11 +43,9 @@ export default async function SubcategoryGalleryPage({
 }) {
   const { category, subcategory } = await params;
 
-  const subcats = serviceSubcategories[category] ?? [];
-  const subTitle = subcats.find((s) => s.slug === subcategory)?.title ?? subcategory;
   const supabase = await createServerSupabaseClient();
 
-  const [{ data: serviceData }, { data: images }] = await Promise.all([
+  const [{ data: serviceData }, { data: images }, { data: subRow, error: subError }] = await Promise.all([
     supabase.from("services").select("title, image_url, description").eq("slug", category).maybeSingle(),
     supabase
       .from("gallery_images")
@@ -53,10 +53,12 @@ export default async function SubcategoryGalleryPage({
       .eq("category", category)
       .eq("subcategory", subcategory)
       .order("display_order", { ascending: true }),
+    supabase.from("service_subcategories").select("title, image_url").eq("service_slug", category).eq("slug", subcategory).maybeSingle(),
   ]);
 
   const catTitle = serviceData?.title ?? categoryNames[category] ?? "גלריה";
-  const heroImageUrl = serviceData?.image_url ?? null;
+  const subTitle = subcategoryTitle(category, subcategory, subRow, Boolean(subError));
+  const heroImageUrl = (!subError && subRow?.image_url) ? subRow.image_url : serviceData?.image_url ?? null;
   const imgs = images ?? [];
 
   return (
